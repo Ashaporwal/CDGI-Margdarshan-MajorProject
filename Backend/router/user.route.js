@@ -12,6 +12,7 @@ import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
+<<<<<<< HEAD
 router.post("/register", register);
 router.post("/login", login);
 router.get("/get", protect, get);
@@ -22,6 +23,19 @@ router.put(
   upload.single("photo"), // IMPORTANT
   updateProfile
 );
+=======
+ 
+router.post("/register",register);
+ 
+router.post("/login",login);
+router.get("/get",protect,get);
+
+router.put("/changePassword",protect,changePassword);
+router.post("/logout",protect,logout);
+
+ 
+export default router;
+>>>>>>> origin/main
 
 router.put("/changePassword", protect, changePassword);
 router.post("/logout", protect, logout);

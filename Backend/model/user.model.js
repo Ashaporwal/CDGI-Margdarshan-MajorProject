@@ -34,6 +34,7 @@ lastName: {
     department: {
         type: String,
         required: true
+        
     },
     graduationYear: {
         type: Number,
