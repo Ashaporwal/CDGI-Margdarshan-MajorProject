@@ -25,6 +25,7 @@ const userSchema = new mongoose.Schema({
     department: {
         type: String,
         required: true
+        
     },
     graduationYear: {
         type: Number,
