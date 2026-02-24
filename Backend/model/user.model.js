@@ -6,6 +6,15 @@ const userSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    firstName: {
+  type: String,
+  required: true
+},
+
+lastName: {
+  type: String,
+  required: true
+},
     email: {
         type: String,
         required: true,
@@ -32,6 +41,9 @@ const userSchema = new mongoose.Schema({
             return this.role !== "admin";
         }
     },
+    photo: {
+  type: String,
+},
     isVerified: {
         type: Boolean,
         default: false

@@ -65,7 +65,8 @@ export const login = async (req, res) => {
 
 export const get = async (req, res) => {
     try {
-        return res.status(200).json({ user: req.user });
+        const user = await User.findById(req.user._id).select("-password");
+        return res.status(200).json({ user });
     } catch (error) {
         console.log("error: ", error);
         return res.status(500).json({ message: "internal server error" });
@@ -103,4 +104,36 @@ export const logout = async (req, res) => {
         console.log("Logout error:", err);
         res.status(500).json({ message: "Server error" });
     }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    console.log("BODY:", req.body);
+    console.log("FILE:", req.file);
+
+    const user = await User.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (req.body.name) user.name = req.body.name;
+    if (req.body.department) user.department = req.body.department;
+    if (req.body.graduationYear)
+      user.graduationYear = req.body.graduationYear;
+
+    if (req.file) {
+      user.photo = req.file.filename;
+    }
+
+    await user.save();
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.log("Update error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
