@@ -6,8 +6,7 @@ import { protect } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-
-router.post( "/job",
+router.post("/job",
   protect ,
   body("title", "Title is required").notEmpty(),
   body("company", "Company is required").notEmpty(),
@@ -23,7 +22,7 @@ router.post( "/job",
 router.get("/jobs", protect ,getAllJobs);
 
 router.get(
-  "jobs/:id",
+  "/jobs/:id",
   protect ,
   param("id", "Invalid Job ID").isMongoId(),
   validate,
