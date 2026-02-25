@@ -1,65 +1,32 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function Profile() {
-  const [preview, setPreview] = useState("");
-  const [form, setForm] = useState({
-    name: "",
-     firstName: "",   // ✅ add this
-  lastName: "", 
-    email: "",
-    department: "",
-    graduationYear: "",
-    photo: null,
-  });
-
-  const departments = [
-    "Computer Science Engineering (CSE)",
-    "Information Technology (IT)",
-    "Electronics & Communication (EC)",
-    "Electrical Engineering (EE)",
-    "Mechanical Engineering (ME)",
-    "Civil Engineering (CE)",
-    "Artificial Intelligence (AI)",
-    "Data Science (DS)",
-  ];
-
-  const years = Array.from(
-    { length: new Date().getFullYear() - 2006 + 5 },
-    (_, i) => 2006 + i
-  );
+  const [user, setUser] = useState({});
+  const [form, setForm] = useState({ name: "", department: "", graduationYear: "" });
+  const [photo, setPhoto] = useState(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await API.get("/get");
-        setForm(res.data.user);
-
-        if (res.data.user.photo) {
-          setPreview(
-            `http://localhost:3000/uploads/${res.data.user.photo}`
-          );
-        }
-      } catch {
-        toast.error("Failed to load profile");
+        const { data } = await API.get("/get");
+        setUser(data.user);
+        setForm({
+          name: data.user.name || "",
+          department: data.user.department || "",
+          graduationYear: data.user.graduationYear || "",
+        });
+      } catch (err) {
+        toast.error("Failed to fetch user data");
       }
     };
     fetchUser();
   }, []);
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    setForm({ ...form, photo: file });
-    setPreview(URL.createObjectURL(file));
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const handleFileChange = (e) => setPhoto(e.target.files[0]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -68,184 +35,100 @@ function Profile() {
     formData.append("name", form.name);
     formData.append("department", form.department);
     formData.append("graduationYear", form.graduationYear);
-
-    if (form.photo instanceof File) {
-      formData.append("photo", form.photo);
-    }
+    if (photo) formData.append("photo", photo);
 
     try {
-      await API.put("/profile", formData);
-      toast.success("Profile updated 🎉");
-    } catch {
-      toast.error("Update failed");
+API.put("profile", formData, {
+  headers: {
+    "Content-Type": "multipart/form-data",
+  },
+});
+      toast.success(data.message);
+      setUser(data.user);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Update failed");
     }
   };
 
   return (
     <>
-   <style>{`
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient(135deg, #003366, #00509e);
-  }
+      <style>{`
+        .auth-container {
+          min-height: 100vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: linear-gradient(135deg, #003366, #00509e);
+        }
 
-  .profile-wrapper {
-    display: flex;
-    gap: 30px;
-    padding: 40px;
-  }
+        .auth-card {
+          background: #ffffff;
+          width: 450px;
+          padding: 35px;
+          border-radius: 12px;
+          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+          transition: 0.3s ease;
+        }
 
-  /* LEFT CARD */
-  .profile-card {
-    width: 30%;
-    background: #ffffff;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
-    text-align: center;
-    transition: 0.3s ease;
-  }
+        .auth-card input,
+        .auth-card select {
+          width: 100%;
+          padding: 12px;
+          margin-bottom: 15px;
+          border: 1px solid #ccc;
+          border-radius: 6px;
+          font-size: 14px;
+        }
 
-  .profile-card:hover {
-    transform: translateY(-5px);
-  }
+        .auth-card button {
+          width: 100%;
+          padding: 12px;
+          background: #003366;
+          color: white;
+          border: none;
+          border-radius: 6px;
+          cursor: pointer;
+        }
 
-  .profile-card img {
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid #00509e;
-    margin-bottom: 15px;
-    transition: 0.3s;
-  }
+        .auth-card button:hover {
+          background: #002244;
+        }
 
-  .profile-card img:hover {
-    transform: scale(1.05);
-  }
+        .auth-card h2 {
+          text-align: center;
+          margin-bottom: 25px;
+          color: #003366;
+        }
+      `}</style>
 
-  .profile-card h3 {
-    margin: 10px 0 5px;
-    color: #003366;
-    font-weight: 600;
-  }
-
-  .profile-card p {
-    margin: 4px 0;
-    color: #555;
-    font-size: 14px;
-  }
-
-  .profile-card input {
-    margin-top: 10px;
-    font-size: 14px;
-  }
-
-  /* RIGHT PANEL */
-  .profile-right {
-    flex: 1;
-    background: #ffffff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
-  }
-
-  .profile-right h2 {
-    margin-bottom: 20px;
-    color: #003366;
-    font-weight: 600;
-  }
-
-  input, select {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    transition: 0.3s;
-    font-size: 14px;
-  }
-
-  input:focus, select:focus {
-    border-color: #00509e;
-    box-shadow: 0 0 6px rgba(0, 80, 158, 0.4);
-    outline: none;
-  }
-
-  button {
-    padding: 12px 20px;
-    background: #003366;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 15px;
-    transition: 0.3s ease;
-  }
-
-  button:hover {
-    background: #002244;
-    transform: translateY(-2px);
-  }
-`}</style>
-
-      <div className="profile-wrapper">
-        <div className="profile-card">
-          <img
-            src={
-              preview ||
-              "https://cdn-icons-png.flaticon.com/512/149/149071.png"
-            }
-            alt="Profile"
-          />
-<h3>{form.firstName} {form.lastName}</h3>
-<p>@{form.name}</p>
-          <p>{form.department}</p>
-          <p>Batch {form.graduationYear}</p>
-          <p>{form.email}</p>
-
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-        </div>
-
-        <div className="profile-right">
-          <h2>Edit Profile</h2>
+      <div className="auth-container">
+        <div className="auth-card">
+          <h2>Update Profile</h2>
 
           <form onSubmit={handleSubmit}>
             <input
+              type="text"
               name="name"
+              placeholder="Full Name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Full Name"
             />
-
-            <select
+            <input
+              type="text"
               name="department"
+              placeholder="Department"
               value={form.department}
               onChange={handleChange}
-            >
-              <option value="">Select Department</option>
-              {departments.map((dept, i) => (
-                <option key={i} value={dept}>
-                  {dept}
-                </option>
-              ))}
-            </select>
-
-            <select
+            />
+            <input
+              type="number"
               name="graduationYear"
+              placeholder="Graduation Year"
               value={form.graduationYear}
               onChange={handleChange}
-            >
-              <option value="">Select Graduation Year</option>
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              ))}
-            </select>
-
-            <button type="submit">Save Changes</button>
+            />
+            <input type="file" onChange={handleFileChange} />
+            <button type="submit">Update Profile</button>
           </form>
         </div>
       </div>
@@ -256,7 +139,6 @@ function Profile() {
 }
 
 export default Profile;
-
 // import { useEffect, useState } from "react";
 // import API from "../services/api";
 // import { toast, ToastContainer } from "react-toastify";
