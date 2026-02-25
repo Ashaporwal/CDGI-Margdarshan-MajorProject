@@ -8,6 +8,7 @@ import userRouter from "./router/user.routes.js";
 import jobRouter from "./router/job.routes.js";
 import adminRouter from "./router/admin.routes.js";
 import alumniRouter from "./router/alumni.routes.js";
+import studentRouter from "./router/student.routes.js";
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ app.use("/api/user", userRouter);
 app.use("/api/job", jobRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/alumni", alumniRouter);
+app.use("/api/student", studentRouter);
 
 
 app.use((req, res) => {
