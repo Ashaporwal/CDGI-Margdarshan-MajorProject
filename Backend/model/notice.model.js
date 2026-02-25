@@ -19,16 +19,24 @@ const noticeSchema = new mongoose.Schema(
       required: true
     },
 
-    targetRole: {
-      type: String,
-      enum: ["student"],
-      default: "student"
+    deadline: {
+      type: Date
+    },
+
+    link: {
+      type: String
     },
 
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "expired"],
+      default: "active"
     }
   },
   { timestamps: true }
