@@ -16,7 +16,7 @@ const jobSchema = new mongoose.Schema(
 
     jobType: {
       type: String,
-      enum: ["Full-time", "Internship"],
+      enum: ["Full-time", "Internship","Campus Drive"],
       required: true
     },
 
@@ -42,7 +42,7 @@ const jobSchema = new mongoose.Schema(
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: false
+      required: true
     },
     status: {
       type: String,
