@@ -9,6 +9,7 @@ import {
 } from "../controller/user.controller.js";
 import { validate } from "../middleware/validate.js";
 import { protect } from "../middleware/auth.middleware.js";
+import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
@@ -47,6 +48,12 @@ router.get(
   get
 );
 
+router.put(
+  "/profile",
+  protect,
+  upload.single("photo"),
+  updateProfile
+);
 
 router.put(
   "/changePassword",
