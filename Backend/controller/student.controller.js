@@ -1,14 +1,11 @@
-// POST	/student/profile	Create profile
-// GET	/student/profile	View own profile
-// PUT	/student/profile	Update profile
-// DELETE	/student/profile	Delete profile
+import StudentProfile from "../model/student.model.js";
 
-import StudentProfile from "../model/studentProfile.model.js";
 export const createProfile = async (req, res) => {
   try {
     // Logic to create student profile
+    const userId = req.user.id;
     const {
-      userId,
+      
       enrollmentNumber,
       course,
       yearOfStudy,
