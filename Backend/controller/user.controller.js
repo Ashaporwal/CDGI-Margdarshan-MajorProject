@@ -31,52 +31,78 @@ import jwt from "jsonwebtoken";
 //     }
 // };
 export const register = async (req, res) => {
-    try {
-        const { name, email, password, role, department, graduationYear } = req.body;
+  try {
+    const {
+      name,
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+      department,
+      graduationYear,
+    } = req.body;
 
-        if (!name || !email || !password || !role) {
-            return res.status(400).json({ message: "Basic fields missing" });
-        }
-
-        if (role === "student") {
-            if (!department || !graduationYear) {
-                return res.status(400).json({ message: "Student fields missing" });
-            }
-        }
-
-        if (role === "alumni") {
-            if (!graduationYear) {
-                return res.status(400).json({ message: "Graduation year required for alumni" });
-            }
-        }
-
-        const userExists = await User.findOne({ email });
-        if (userExists) {
-            return res.status(400).json({ message: "Email already registered" });
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 10);
-
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword,
-            role,
-            department,
-            graduationYear,
-            isVerified: role === "student" ? true : false
-        });
-
-        res.status(201).json({
-            message: "Registered successfully",
-           
-        });
-
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "Server error" });
+    // 🔹 Basic validation
+    if (!name || !firstName || !lastName || !email || !password || !role) {
+      return res.status(400).json({ message: "All required fields missing" });
     }
+
+    // 🔹 Role based validation
+    if (role === "student") {
+      if (!department || !graduationYear) {
+        return res
+          .status(400)
+          .json({ message: "Department and graduation year required for student" });
+      }
+    }
+
+    if (role === "alumni") {
+      if (!graduationYear) {
+        return res
+          .status(400)
+          .json({ message: "Graduation year required for alumni" });
+      }
+    }
+
+    // 🔹 Check if email already exists
+    const userExists = await User.findOne({ email });
+    if (userExists) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    // 🔹 Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // 🔹 Create user
+    const user = await User.create({
+      name,
+      firstName,
+      lastName,
+      email,
+      password: hashedPassword,
+      role,
+      department,
+      graduationYear,
+      isVerified: role === "student" ? true : false,
+    });
+
+    res.status(201).json({
+      message: "Registered successfully",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
+
+  } catch (err) {
+    console.log("Register error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
+
 
 export const login = async (req, res) => {
     try {
