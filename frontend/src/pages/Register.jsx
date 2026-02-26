@@ -50,7 +50,7 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await API.post("/register", form);
+      const res = await API.post("/api/register", form);
       localStorage.setItem("token", res.data.token);
 
       toast.success("Registration successful 🎉");
@@ -59,6 +59,7 @@ function Register() {
         navigate("/dashboard");
       }, 1000);
     } catch (err) {
+     
       toast.error(err.response?.data?.message || "Registration failed");
     }
   };

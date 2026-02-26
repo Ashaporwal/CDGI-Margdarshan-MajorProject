@@ -1,15 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register";
+import Landing from "./pages/public/Landing";
 import Login from "./pages/Login";
 import Profile from "./pages/Profile";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Register />} />
+        {/* <Route path="/" element={<Register />} /> */}
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
 
         <Route

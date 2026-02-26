@@ -34,7 +34,7 @@ function Login() {
     }
 
     try {
-      const res = await API.post("/login", form);
+      const res = await API.post("/api/login", form);
       localStorage.setItem("token", res.data.token);
 
       toast.success("Login successful 🎉");
