@@ -206,7 +206,7 @@ function ProfilePage() {
         .content-area { padding:30px; color:${darkTheme ? "#fff" : "#000"}; flex:1;}
 
         /* Profile Card */
-        .profile-card { display:flex; background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.1); padding:15px 20px; width:100%; height:120px; gap:20px; align-items:center; position:relative; margin-bottom:20px;}
+        .profile-card { display:flex; background:#fff; border-radius:12px; box-shadow:0 6px 20px rgba(0,0,0,0.1); padding:15px 20px; width:95%; height:120px; gap:20px; align-items:center; position:relative; margin-bottom:20px;}
         .save-action { position:absolute; top:10px; right:20px; }
         .save-btn { padding:6px 12px; border:none; border-radius:6px; background:#003366; color:#fff; cursor:pointer; font-size:13px; }
         .profile-left { flex:0 0 100px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
