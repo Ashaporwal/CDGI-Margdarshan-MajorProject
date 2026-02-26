@@ -1,4 +1,4 @@
-import express from "express";
+import express, { application } from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
@@ -9,6 +9,8 @@ import jobRouter from "./router/job.routes.js";
 import adminRouter from "./router/admin.routes.js";
 import alumniRouter from "./router/alumni.routes.js";
 import studentRouter from "./router/student.routes.js";
+import noticeRouter from "./router/notice.routes.js";
+import applicationRouter from "./router/application.routes.js";
 
 dotenv.config();
 
@@ -33,6 +35,8 @@ app.use("/api/job", jobRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/alumni", alumniRouter);
 app.use("/api/student", studentRouter);
+app.use("/api" , noticeRouter);
+app.use("/api" , applicationRouter)
 
 
 app.use((req, res) => {
