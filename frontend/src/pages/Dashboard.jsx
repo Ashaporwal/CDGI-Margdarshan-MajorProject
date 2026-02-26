@@ -218,7 +218,7 @@ function Dashboard() {
           </div>
 
           <div className="content-area">
-            <h2>Welcome to Dashboard 🎓</h2>
+            <h2>Welcome to Dashboard </h2>
             <p>Select any menu item from the left panel to navigate.</p>
           </div>
         </div>
