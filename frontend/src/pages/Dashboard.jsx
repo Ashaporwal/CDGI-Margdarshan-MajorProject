@@ -210,12 +210,6 @@ function Dashboard() {
   alt="profile"
   className="profile-img"
 />
-{/* 
-<img
-  src={`http://localhost:3000/uploads/${user.profilePic}`}
-  alt="profile"
-  style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-/> */}
 
 
 
@@ -224,7 +218,7 @@ function Dashboard() {
           </div>
 
           <div className="content-area">
-            <h2>Welcome to Dashboard 🎓</h2>
+            <h2>Welcome to Dashboard </h2>
             <p>Select any menu item from the left panel to navigate.</p>
           </div>
         </div>
