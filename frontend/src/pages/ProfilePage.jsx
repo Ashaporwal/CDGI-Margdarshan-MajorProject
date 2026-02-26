@@ -115,11 +115,7 @@ function ProfilePage() {
               <button><FaBell /></button>
               <div className="profile-section" onClick={() => navigate("/profile")}>
                 <span style={{ fontWeight: "500" }}>{user?.name}</span>
-                {/* <img
-                  src={user?.photo ? `http://localhost:3000/uploads/${user.photo}` : "https://via.placeholder.com/38"}
-                  alt="profile"
-                  className="profile-img"
-                /> */}
+           
               </div>
             </div>
           </div>
