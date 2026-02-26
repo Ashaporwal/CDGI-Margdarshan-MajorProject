@@ -210,12 +210,6 @@ function Dashboard() {
   alt="profile"
   className="profile-img"
 />
-{/* 
-<img
-  src={`http://localhost:3000/uploads/${user.profilePic}`}
-  alt="profile"
-  style={{ width: "60px", height: "60px", borderRadius: "50%" }}
-/> */}
 
 
 
