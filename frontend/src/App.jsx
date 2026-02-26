@@ -2,36 +2,48 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./pages/Register";
 import Landing from "./pages/public/Landing";
 import Login from "./pages/Login";
-// import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
+import Dashboard from "./pages/student/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ProfilePage from "./pages/ProfilePage";
-
+import ProfilePage from "./pages/student/ProfilePage"
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Register />} /> */}
+
+        {/* Public Routes */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<ProfilePage />} />
-    {/* 
-            <Route path="/profile" element={
-                <ProtectedRoute>
-                  <Profile />
-                </ProtectedRoute>
-              }
-            /> */}
-<Route path="/editprofile" element={<ProfilePage/>} />
+        <Route path="/register" element={<Register />} />
+
+        {/* Protected Routes */}
         <Route
-          path="/dashboard"
+          path="/student/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/student/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/student/editprofile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
       </Routes>
     </BrowserRouter>
   );
