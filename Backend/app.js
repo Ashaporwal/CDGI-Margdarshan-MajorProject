@@ -21,8 +21,8 @@ app.use(cors({
   credentials: true
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,11 +31,11 @@ app.use("/uploads", express.static("uploads"));
 
 
 app.use("/api", userRouter);
-app.use("/api/job", jobRouter);
+app.use("/api/jobs", jobRouter);
 app.use("/api/admin", adminRouter);
 app.use("/api/alumni", alumniRouter);
 app.use("/api/student", studentRouter);
-app.use("/api" , noticeRouter);
+app.use("/api/notice" , noticeRouter);
 app.use("/api" , applicationRouter)
 
 
