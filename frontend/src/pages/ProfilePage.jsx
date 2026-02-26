@@ -64,7 +64,7 @@ function ProfilePage() {
 
     try {
         
-      const { data } = await API.put("/user/profile", formData, {
+      const { data } = await API.put("/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -115,11 +115,7 @@ function ProfilePage() {
               <button><FaBell /></button>
               <div className="profile-section" onClick={() => navigate("/profile")}>
                 <span style={{ fontWeight: "500" }}>{user?.name}</span>
-                <img
-                  src={user?.photo ? `http://localhost:3000/uploads/${user.photo}` : "https://via.placeholder.com/38"}
-                  alt="profile"
-                  className="profile-img"
-                />
+           
               </div>
             </div>
           </div>
@@ -136,11 +132,11 @@ function ProfilePage() {
               </div>
 
               <div className="profile-left">
-                <img
+                {/* <img
                   src={user?.photo ? `http://localhost:3000/uploads/${user.photo}` : "https://via.placeholder.com/90"}
                   alt="profile"
                   className="profile-main-pic"
-                />
+                /> */}
                 <label htmlFor="photo-upload" className="upload-icon">
                   <FaUpload />
                 </label>

@@ -201,7 +201,7 @@ function Dashboard() {
                   {user?.name}
                 </span>
 
-          <img
+          {/* <img
   src={
     user?.profilePic
       ? `http://localhost:3000/uploads/${user.profilePic}`
@@ -209,8 +209,13 @@ function Dashboard() {
   }
   alt="profile"
   className="profile-img"
-/>
+/> */}
 
+<img
+  src={user?.photo ? `http://localhost:3000/uploads/${user.photo}` : "/default.avif"}
+  alt="profile"
+  className="profile-img"
+/>
 
 
               </div>
