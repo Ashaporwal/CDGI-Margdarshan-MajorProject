@@ -12,13 +12,14 @@ function App() {
       <Routes>
         <Route path="/" element={<Register />} />
         <Route path="/login" element={<Login />} />
-{/* 
-        <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        /> */}
+          <Route path="/profile" element={<ProfilePage />} />
+    {/* 
+            <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            /> */}
 <Route path="/editprofile" element={<ProfilePage/>} />
         <Route
           path="/dashboard"
