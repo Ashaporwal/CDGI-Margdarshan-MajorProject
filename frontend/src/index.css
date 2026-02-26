@@ -1,3 +1,17 @@
+/* 
+@tailwind base;
+@tailwind components;
+@tailwind utilities; */
+@import "tailwindcss";
+.input {
+  @apply w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-violet-500 outline-none;
+}
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+/* 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -65,4 +79,5 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
-}
+} */
+
