@@ -14,7 +14,7 @@ import { validate } from "../middleware/validate.js";
 const router = express.Router();
 
 router.post(
-  "/notice",
+  "/",
   protect,
   body("title").notEmpty(),
   body("description").notEmpty(),
@@ -22,11 +22,11 @@ router.post(
   createNotice
 );
 
-router.get("/notice", protect, getAllNotices);
+router.get("/", protect, getAllNotices);
 
 
 router.get(
-  "/notice/:id",
+  "/:id",
   protect,
   param("id").isMongoId(),
   validate,
@@ -34,7 +34,7 @@ router.get(
 );
 
 router.put(
-  "/notice/:id",
+  "/:id",
   protect,
   param("id").isMongoId(),
   validate,
@@ -42,7 +42,7 @@ router.put(
 );
 
 router.delete(
-  "/notice/:id",
+  "/:id",
   protect,
   param("id").isMongoId(),
   validate,

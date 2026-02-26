@@ -13,9 +13,8 @@ import { protect } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-// CREATE JOB
 router.post(
-  "/job",
+  "/",
   protect,
   body("title", "Title is required").notEmpty(),
   body("company", "Company is required").notEmpty(),
@@ -28,21 +27,19 @@ router.post(
   createJob
 );
 
-// GET ALL
-router.get("/jobs", protect, getAllJobs);
 
-// GET BY ID
+router.get("/", protect, getAllJobs);
+
 router.get(
-  "/jobs/:id",
+  "/:id",
   protect,
   param("id", "Invalid Job ID").isMongoId(),
   validate,
   getJobById
 );
 
-// UPDATE
 router.put(
-  "/jobs/:id",
+  "/:id",
   protect,
   param("id", "Invalid Job ID").isMongoId(),
   body("jobType")
@@ -57,9 +54,9 @@ router.put(
   updateJob
 );
 
-// DELETE
+
 router.delete(
-  "/jobs/:id",
+  "/:id",
   protect,
   param("id", "Invalid Job ID").isMongoId(),
   validate,
