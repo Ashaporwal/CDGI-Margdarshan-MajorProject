@@ -7,14 +7,14 @@ const userSchema = new mongoose.Schema({
         trim: true
     },
     firstName: {
-  type: String,
-  required: true
-},
+        type: String,
+        required: true
+    },
 
-lastName: {
-  type: String,
-  required: true
-},
+    lastName: {
+        type: String,
+        required: true
+    },
     email: {
         type: String,
         required: true,
@@ -34,7 +34,7 @@ lastName: {
     department: {
         type: String,
         required: true
-        
+
     },
     graduationYear: {
         type: Number,
@@ -43,8 +43,8 @@ lastName: {
         }
     },
     photo: {
-  type: String,
-},
+        type: String,
+    },
     isVerified: {
         type: Boolean,
         default: false

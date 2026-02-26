@@ -27,7 +27,7 @@ export const createProfile = async (req, res) => {
       placementStatus,
     });
 
-    return res.status(201).json({ message: "Profile created successfully" });
+    return res.status(201).json({ message: "Profile created successfully" ,profile});
   } catch (error) {
     console.log("Create profile error: ", error);
     return res.status(500).json({ message: "internal server error" });
