@@ -4,7 +4,11 @@ import Landing from "./pages/public/Landing";
 import Login from "./pages/Login";
 import Dashboard from "./pages/student/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
-import ProfilePage from "./pages/student/ProfilePage"
+import ProfilePage from "./pages/student/ProfilePage";
+
+import AlumniLayout from "./pages/alumni/AlumniLayout";
+import AlumniDashboard from "./pages/alumni/AlumniDashboard";
+import AlumniProfile from "./pages/alumni/AlumniProfile";
 
 function App() {
   return (
@@ -16,11 +20,11 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Protected Routes */}
+        {/* Student Routes */}
         <Route
           path="/student/dashboard"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="student">
               <Dashboard />
             </ProtectedRoute>
           }
@@ -29,20 +33,25 @@ function App() {
         <Route
           path="/student/profile"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute role="student">
               <ProfilePage />
             </ProtectedRoute>
           }
         />
 
+        {/* Alumni Layout Route (Parent) */}
         <Route
-          path="/student/editprofile"
+          path="/alumni"
           element={
-            <ProtectedRoute>
-              <ProfilePage />
+            <ProtectedRoute role="alumni">
+              <AlumniLayout />
             </ProtectedRoute>
           }
-        />
+        >
+          {/*  CHILD ROUTES */}
+          <Route path="dashboard" element={<AlumniDashboard />} />
+          <Route path="profile" element={<AlumniProfile />} />
+        </Route>
 
       </Routes>
     </BrowserRouter>
