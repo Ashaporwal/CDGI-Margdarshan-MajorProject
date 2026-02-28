@@ -6,7 +6,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto h-16 flex items-center justify-between px-6">
         
         <div className="font-bold text-xl text-violet-600 tracking-wide">
-          Campus Connect
+          🎓 Campus Connect
         </div>
 
         <div className="hidden md:flex gap-8 text-gray-600 font-medium">
