@@ -152,6 +152,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+      
       },
     });
   }
@@ -208,27 +209,62 @@ export const logout = async (req, res) => {
   }
 };
 
+// export const updateProfile = async (req, res) => {
+//   try {
+//     console.log("BODY:", req.body);
+//     console.log("FILE:", req.file);
+
+//     const user = await User.findById(req.user.id);
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     if (req.body.name) user.name = req.body.name;
+//     if (req.body.department) user.department = req.body.department;
+//     if (req.body.graduationYear)
+//       user.graduationYear = req.body.graduationYear;
+
+//      if (req.file && req.file.filename) {
+//       updateFields.photo = req.file.filename;
+//     }
+
+//     const user = await User.findByIdAndUpdate(
+//       req.user.id,
+//       { $set: updateFields },
+//       { new: true, runValidators: true }
+//     );
+
+//     // await user.save();
+
+//     res.status(200).json({
+//       message: "Profile updated successfully",
+//       user,
+//     });
+//   } catch (error) {
+//     console.log("Update error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const updateProfile = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+    const updateFields = {};
 
-    const user = await User.findById(req.user.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (req.body.name) user.name = req.body.name;
-    if (req.body.department) user.department = req.body.department;
+    if (req.body.name) updateFields.name = req.body.name;
+    if (req.body.department) updateFields.department = req.body.department;
     if (req.body.graduationYear)
-      user.graduationYear = req.body.graduationYear;
+      updateFields.graduationYear = req.body.graduationYear;
 
-    if (req.file) {
-      user.photo = req.file.filename;
+    if (req.file && req.file.filename) {
+      updateFields.photo = req.file.filename;
     }
 
-    await user.save();
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $set: updateFields },
+      { new: true, runValidators: true }
+    );
 
     res.status(200).json({
       message: "Profile updated successfully",

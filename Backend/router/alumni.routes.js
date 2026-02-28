@@ -13,7 +13,7 @@ import { validate } from "../middleware/validate.js";
 const router = express.Router();
 
 router.post(
-  "/alumni",
+  "/",
   protect,
 
   body("company", "Company is required").notEmpty(),
@@ -26,20 +26,20 @@ router.post(
 
 
 router.get(
-  "/alumni/me",
+  "/me",
   protect,
   getMyAlumniProfile
 );
 
 router.put(
-  "/alumni",
+  "/",
   protect,
   updateAlumniProfile
 );
 
 
 router.get(
-  "/alumni/all",
+  "/all",
   protect,
   getAllAlumniProfiles
 );
