@@ -240,6 +240,7 @@
 // }
 
 // export default Register;
+
 import { useState, useEffect } from "react";
 import API from "../services/api";
 import { FiEye, FiEyeOff } from "react-icons/fi";
