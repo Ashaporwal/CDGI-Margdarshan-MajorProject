@@ -11,6 +11,14 @@ input::-ms-reveal,
 input::-ms-clear {
   display: none;
 }
+
+.input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
 /* 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
