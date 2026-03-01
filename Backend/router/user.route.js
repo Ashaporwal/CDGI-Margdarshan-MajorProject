@@ -5,7 +5,8 @@ import {
   login,
   logout,
   register,
-  updateProfile,
+  // updateProfile,
+  updateUserProfile
 } from "../controller/user.controller.js";
 import { protect } from "../middleware/auth.middleware.js";
 import { upload } from "../middleware/multer.js";
@@ -17,12 +18,29 @@ router.post("/login", login);
 router.get("/get", protect, get);
 
 
-router.put(
-  "/profile",
-  protect,
-  upload.single("photo"), // IMPORTANT
-  updateProfile
+// router.put(
+//   "/profile",
+//   protect,
+//   upload.single("profilePic"), // IMPORTANT
+//   updateProfile
+// );
+
+
+router.put("/profile",protect,upload.single("profilePic"),
+updateUserProfile
 );
+
+
+// router.put(
+//   "/profile",
+//   protect,
+//   upload.fields([
+//     { name: "resume", maxCount: 1 },
+//     { name: "profilePic", maxCount: 1 },
+//   ]),
+//   updateProfile
+// );
+
 
 router.put("/changePassword", protect, changePassword);
 router.post("/logout", protect, logout);
