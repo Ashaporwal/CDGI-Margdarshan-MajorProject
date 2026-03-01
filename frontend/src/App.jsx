@@ -6,7 +6,8 @@ import Dashboard from "./pages/student/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./pages/student/ProfilePage";
 import Landing from "./pages/public/Landing";
-import JobPage from "./pages/alumni/JobPage";
+import JobPage from "./pages/student/JobPage";
+// import JobPage from "./pages/alumni/JobPage";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/jobs" element={<JobPage />} />
+         <Route path="/jobs" element={<JobPage/>} />
     {/* 
             <Route path="/profile" element={
                 <ProtectedRoute>
