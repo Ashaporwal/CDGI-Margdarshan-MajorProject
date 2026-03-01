@@ -69,6 +69,7 @@ export const updateProfile = async (req, res) => {
       linkedin: req.body.linkedin,
       github: req.body.github,
       portfolio: req.body.portfolio,
+
     };
 
     // if (req.file) {

@@ -1,54 +1,35 @@
 import express from "express";
 import mongoose from "mongoose";
+import userRoutes from "./router/user.route.js";
+import studentRoutes from "./router/student.routes.js";
+import jobRoutes from "./router/job.routes.js";
 import dotenv from "dotenv";
 import cors from "cors";
-import bodyParser from "body-parser";
-
-import userRouter from "./router/user.routes.js";
-import jobRouter from "./router/job.routes.js";
-import adminRouter from "./router/admin.routes.js";
-import alumniRouter from "./router/alumni.routes.js";
-import studentRouter from "./router/student.routes.js";
+import { fileURLToPath } from "url";
+import path from "path";
 
 dotenv.config();
 
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true
+    origin:"http://localhost:5173",
+    credentials:true
 }));
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname,"uploads")));
 
+mongoose.connect(process.env.URL)
+    .then(() => console.log("DB connected"))
+    .catch(err => console.log("DB connection error:", err));
 
-app.use("/uploads", express.static("uploads"));
+app.use('/user',userRoutes);
+app.use('/user/student',studentRoutes);
+app.use('/user/job',jobRoutes);
+// app.use('/student',studentRoutes);
 
-
-app.use("/api/user", userRouter);
-app.use("/api/job", jobRouter);
-app.use("/api/admin", adminRouter);
-app.use("/api/alumni", alumniRouter);
-app.use("/api/student", studentRouter);
-
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: "Route not found"
-  });
-});
-
-mongoose.connect(process.env.DB_URL)
-  .then(() => {
-    console.log("MongoDB connected successfully");
-    app.listen(process.env.PORT, () => {
-      console.log("Server started on port:", process.env.PORT);
-    });
-  })
-  .catch(error => {
-    console.log("Database connection failed:", error);
-  });
+app.listen(5000, () => console.log("Server started"));
