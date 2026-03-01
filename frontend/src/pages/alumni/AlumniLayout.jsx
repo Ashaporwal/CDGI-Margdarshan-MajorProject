@@ -6,6 +6,7 @@ import {
     FaBriefcase,
     FaUsers,
     FaChalkboardTeacher,
+FaClipboardList,
     FaUser,
     FaBell,
     FaMoon,
@@ -37,18 +38,18 @@ function AlumniLayout() {
     //     return () => clearInterval(interval);
     // }, []);
 
-useEffect(() => {
-  const fetchUser = async () => {
-    try {
-      const { data } = await API.get("/api/get");
-      setUser(data.user);
-    } catch (err) {
-      console.log("User fetch failed");
-    }
-  };
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const { data } = await API.get("/api/get");
+                setUser(data.user);
+            } catch (err) {
+                console.log("User fetch failed");
+            }
+        };
 
-  fetchUser();
-}, []);
+        fetchUser();
+    }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -58,11 +59,14 @@ useEffect(() => {
 
     const menuItems = [
         { name: "Dashboard", icon: <FaTachometerAlt />, path: "/alumni/dashboard" },
-        { name: "Post Job", icon: <FaBriefcase />, path: "/alumni/jobs" },
+        { name: "Post Job", icon: <FaBriefcase />, path: "/alumni/post-job" },
+        { name: "My Jobs", icon: <FaClipboardList />, path: "/alumni/my-jobs" },
         { name: "Mentorship", icon: <FaChalkboardTeacher />, path: "/alumni/mentorship" },
         { name: "Alumni Network", icon: <FaUsers />, path: "/alumni/network" },
         { name: "Profile", icon: <FaUser />, path: "/alumni/profile" },
     ];
+
+
 
     return (
         <div className="flex min-h-screen bg-gray-100">
