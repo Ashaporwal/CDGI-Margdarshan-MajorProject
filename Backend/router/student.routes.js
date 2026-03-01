@@ -4,11 +4,13 @@ import {
   createProfile,
   getProfile,
   updateProfile,
-  deleteProfile
+  deleteProfile,
+  getFullProfile
 } from "../controller/student.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
 import { validate } from "../middleware/validate.js";
+import { upload } from "../middleware/multer.js";
 
 const router = express.Router();
 
@@ -31,9 +33,21 @@ router.get(
 );
 
 
+router.get("/full-profile", protect, getFullProfile);
+
+
+
+// router.put(
+//   "/profile",
+//   protect,
+//   upload.single("resume"),
+//   updateProfile
+// );
+
 router.put(
   "/profile",
   protect,
+  upload.single("photo"),
   updateProfile
 );
 
