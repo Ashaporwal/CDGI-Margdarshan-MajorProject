@@ -105,116 +105,259 @@ export const register = async (req, res) => {
 
 
 export const login = async (req, res) => {
-    try {
-        const { email, password } = req.body;
-
-        if (!email || !password) {
-            return res.status(400).json({ message: "Email and password is required" });
-        }
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ message: "invalid email or password" });
-        }
-
-        //  if (user.role === "alumni" && !user.isVerified) {
-        //     return res.status(403).json({
-        //         message: "Wait for admin approval"
-        //     });
-        // }
-
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "invalid email or password" });
-        }
-
-        const token = jwt.sign(
-            { id: user._id, role: user.role },
-            process.env.JWT || "secretkey",
-            { expiresIn: "7d" }
-        );
-        res.status(200).json({ message: "Login successfull", token });
+  try {
+    console.log("LOGIN BODY:", req.body);
+    const { email, password } = req.body;
+    // console.log(req.body);
+    console.log(email, password);
+    if (!email || !password) {
+      return res.status(400).json({ message: "Email and password is required" });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "invalid email or password" });
     }
 
+    //  if (user.role === "alumni" && !user.isVerified) {
+    //     return res.status(403).json({
+    //         message: "Wait for admin approval"
+    //     });
+    // }
 
-    catch (error) {
-        console.log("Login error: ", error);
-        return res.status(500).json({ message: "internal server error" });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "invalid email or password" });
     }
+
+    const token = jwt.sign(
+      { id: user._id, role: user.role },
+      process.env.JWT_SECRET || "secretkey",
+      { expiresIn: "7d" }
+    );
+    // res.status(200).json({ message: "Login successfull", token });
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        role: user.role,
+        photo: user.photo || null,
+      },
+    });
+  }
+
+
+  catch (error) {
+    console.log("Login error: ", error);
+    return res.status(500).json({ message: "internal server error" });
+  }
 }
 
 
 export const get = async (req, res) => {
-    try {
-        const user = await User.findById(req.user._id).select("-password");
-        return res.status(200).json({ user });
-    } catch (error) {
-        console.log("error: ", error);
-        return res.status(500).json({ message: "internal server error" });
-    }
+  try {
+    const user = await User.findById(req.user._id).select("-password");
+    return res.status(200).json({ user });
+  } catch (error) {
+    console.log("error: ", error);
+    return res.status(500).json({ message: "internal server error" });
+  }
 };
 
 
 export const changePassword = async (req, res) => {
-    try {
-        const { oldPassword, newPassword } = req.body;
+  try {
+    const { oldPassword, newPassword } = req.body;
 
-        if (!oldPassword || !newPassword) {
-            return res.status(400).json({ message: "Old password and new passwod are required" });
-        }
-
-        // const user = await User.findById(req.user._id);
-            const user = await User.findById(req.user.id);
-
-        const isMatch = await bcrypt.compare(oldPassword, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ message: "old password is incorrect " });
-        }
-        user.password = await bcrypt.hash(newPassword, 10);
-        await user.save();
-        return res.status(200).json({ message: "password change successfully " });
-    } catch (err) {
-        console.group(err);
-        return res.status(500).json({ message: "internal server error" });
+    if (!oldPassword || !newPassword) {
+      return res.status(400).json({ message: "Old password and new passwod are required" });
     }
+
+    // const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user.id);
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "old password is incorrect " });
+    }
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    return res.status(200).json({ message: "password change successfully " });
+  } catch (err) {
+    console.group(err);
+    return res.status(500).json({ message: "internal server error" });
+  }
 };
 
 export const logout = async (req, res) => {
-    try {
-        res.status(200).json({ message: "Logged out successfully" });
-    } catch (err) {
-        console.log("Logout error:", err);
-        res.status(500).json({ message: "Server error" });
-    }
+  try {
+    res.status(200).json({ message: "Logged out successfully" });
+  } catch (err) {
+    console.log("Logout error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 };
 
-export const updateProfile = async (req, res) => {
-  try {
-    console.log("BODY:", req.body);
-    console.log("FILE:", req.file);
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
 
+//     const personal = JSON.parse(req.body.personal || "{}");
+//     const academic = JSON.parse(req.body.academic || "{}");
+//     const socialLinks = JSON.parse(req.body.socialLinks || "{}");
+//     const skills = req.body.skills || "";
+
+//     const updateData = { ...personal, ...academic, skills, ...socialLinks };
+
+//     if (req.files?.resume) updateData.resume = req.files.resume[0].path;
+//     if (req.files?.profilePic) updateData.profilePic = req.files.profilePic[0].path;
+
+//     const updatedUser = await User.findByIdAndUpdate(userId, updateData, { new: true });
+
+//     res.status(200).json({ success: true, user: updatedUser });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ success: false, error: err.message });
+//   }
+// };
+
+
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const user = await User.findById(req.user._id);
+//     if (!user) return res.status(404).json({ message: "User not found" });
+
+//     // if (req.body.name) user.name = req.body.name;
+
+//     if (req.body.firstName) user.firstName = req.body.firstName;
+//     if (req.body.firstName) user.firstName = req.body.firstName;
+//         if (req.body.lastName) user.lastName = req.body.lastName;
+
+//     // if (req.body.department) user.department = req.body.department;
+//     // if (req.body.graduationYear) user.graduationYear = req.body.graduationYear;
+//     // if (req.file) user.photo = req.file.filename;
+// if (req.file) {
+//   user.photo = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+// }
+
+
+//     await user.save();
+
+//     // res.status(200).json({
+//     //   message: "Profile updated successfully",
+//     //   user: {
+//     //     _id: user._id,
+//     //     name: user.name,
+//     //     firstName: user.firstName,
+//     //     lastName: user.lastName,
+//     //     email: user.email,
+//     //     role: user.role,
+//     //     photo: user.photo || null,
+//     //   },
+//     // });
+
+//     return res.status(200).json({message:"Profile updated successfully",user});
+//   } catch (err) {
+//     console.log("Update error:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
+export const updateUserProfile = async (req, res) => {
+  try {
     const user = await User.findById(req.user.id);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (req.body.name) user.name = req.body.name;
-    if (req.body.department) user.department = req.body.department;
-    if (req.body.graduationYear)
-      user.graduationYear = req.body.graduationYear;
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.phone = req.body.phone || user.phone;
 
     if (req.file) {
-      user.photo = req.file.filename;
+      user.photo = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
     }
 
     await user.save();
 
-    res.status(200).json({
-      message: "Profile updated successfully",
-      user,
-    });
+    res.status(200).json({ message: "User updated", user });
+
   } catch (error) {
-    console.log("Update error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+
+// export const updateProfile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+
+//     const updateData = {
+//       enrollmentNumber: req.body.enrollmentNumber,
+//       course: req.body.course,
+//       yearOfStudy: req.body.yearOfStudy,
+//       cgpa: req.body.cgpa,
+//       address: req.body.address,
+//       skills: req.body.skills,
+//       linkedin: req.body.linkedin,
+//       github: req.body.github,
+//       portfolio: req.body.portfolio,
+//     };
+
+//     if (req.file) {
+//       updateData.resume = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+//     }
+
+//     const profile = await StudentProfile.findOneAndUpdate(
+//       { userId },
+//       updateData,
+//       { new: true }
+//     );
+
+//     res.status(200).json({ success: true, profile });
+
+//   } catch (error) {
+//     res.status(500).json({ success: false, message: error.message });
+//   }
+// };
+
+
+
+// export const updateProfile = async (req, res) => {
+//   try {
+//     console.log("BODY:", req.body);
+//     console.log("FILE:", req.file);
+
+//     const user = await User.findById(req.user.id);
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     if (req.body.name) user.name = req.body.name;
+//     if (req.body.department) user.department = req.body.department;
+//     if (req.body.graduationYear)
+//       user.graduationYear = req.body.graduationYear;
+
+//     if (req.file) {
+//       user.photo = req.file.filename;
+//     }
+
+//     await user.save();
+
+//     res.status(200).json({
+//       message: "Profile updated successfully",
+//       user,
+//     });
+//   } catch (error) {
+//     console.log("Update error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
