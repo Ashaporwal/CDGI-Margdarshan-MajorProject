@@ -17,6 +17,7 @@ export const createJob = async (req, res) => {
             job
         });
     } catch (error) {
+        
         res.status(500).json({ success: false, error: error.message });
     }
 };

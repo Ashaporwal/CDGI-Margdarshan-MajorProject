@@ -22,11 +22,18 @@ router.post(
     .isIn(["Full-time", "Internship"]),
   body("location", "Location is required").notEmpty(),
   body("description", "Description is required").notEmpty(),
-  body("deadline", "Deadline must be a valid date").isISO8601(),
+  // body("deadline", "Deadline must be a valid date").isISO8601(),
+body("minCGPA").optional({ checkFalsy: true }).isFloat({ min: 0, max: 10 }),
+body("requirements").optional().isArray(),
+body("skills").optional().isArray(),
   validate,
   createJob
 );
 
+// router.get("/my", protect, async (req, res) => {
+//   const jobs = await Job.find({ postedBy: req.user.id });
+//   res.json(jobs);
+// });
 
 router.get("/", protect, getAllJobs);
 
