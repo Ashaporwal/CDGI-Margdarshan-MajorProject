@@ -11,6 +11,7 @@ import alumniRouter from "./router/alumni.routes.js";
 import studentRouter from "./router/student.routes.js";
 import noticeRouter from "./router/notice.routes.js";
 import applicationRouter from "./router/application.routes.js";
+import campusDriveRouter from "./router/campusDrive.routes.js";
 
 dotenv.config();
 
@@ -36,8 +37,8 @@ app.use("/api/admin", adminRouter);
 app.use("/api/alumni", alumniRouter);
 app.use("/api/student", studentRouter);
 app.use("/api/notice" , noticeRouter);
-app.use("/api" , applicationRouter)
-
+app.use("/api" , applicationRouter);
+app.use("/api/campus-drives", campusDriveRouter);
 
 app.use((req, res) => {
   res.status(404).json({
