@@ -145,7 +145,14 @@ function Profile() {
         <div className="auth-card">
           <h2>Update Profile</h2>
 
-          {preview && <img src={preview} alt="preview" className="photo-preview" />}
+          {/* {preview && <img src={preview} alt="preview" className="photo-preview" />}
+           */}
+
+           <img
+  src={preview || "https://i.gifer.com/YCZH.gif"}
+  alt="preview"
+  className="photo-preview"
+/>
 
           <form onSubmit={handleSubmit}>
             <input
