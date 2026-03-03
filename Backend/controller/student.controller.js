@@ -136,17 +136,44 @@ export const deleteProfile = async (req, res) => {
 // import User from "../model/user.model.js";
 // import StudentProfile from "../model/student.model.js";
 
-import Student from "../model/student.model.js";
+// import Student from "../model/student.model.js";
+
+// export const getFullProfile = async (req, res) => {
+//   console.log("getFullProfile called for user:", req.user.id);
+
+//   try {
+//     let profile = await StudentProfile.findOne({ userId: req.user.id });
+
+//     // Agar profile nahi hai, to create default empty profile
+//     if (!profile) {
+//       console.log("Profile not found, creating default profile...");
+//       profile = await StudentProfile.create({
+//         userId: req.user.id,
+//         enrollmentNumber: "",
+//         course: "",
+//         yearOfStudy: null,
+//         cgpa: null,
+//         address: "",
+//         skills: "",
+//         linkedin: "",
+//         github: "",
+//         portfolio: "",
+//         resume: "",
+//       });
+//     }
+
+//     res.json({ user: req.user, studentProfile: profile });
+//   } catch (err) {
+//     console.error("Error in getFullProfile:", err);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
 
 export const getFullProfile = async (req, res) => {
-  console.log("getFullProfile called for user:", req.user.id);
-
   try {
     let profile = await StudentProfile.findOne({ userId: req.user.id });
 
-    // Agar profile nahi hai, to create default empty profile
     if (!profile) {
-      console.log("Profile not found, creating default profile...");
       profile = await StudentProfile.create({
         userId: req.user.id,
         enrollmentNumber: "",
@@ -159,10 +186,19 @@ export const getFullProfile = async (req, res) => {
         github: "",
         portfolio: "",
         resume: "",
+        profilePic: "",
       });
     }
 
-    res.json({ user: req.user, studentProfile: profile });
+    // Full URL for profilePic (backend)
+    const profilePicURL = profile.profilePic
+      ? `${req.protocol}://${req.get("host")}/uploads/${profile.profilePic}`
+      : "https://i.gifer.com/YCZH.gif"; // default animated avatar
+
+    res.status(200).json({
+      user: { ...req.user.toObject(), photo: req.user.photo || profilePicURL },
+      studentProfile: { ...profile.toObject(), profilePic: profilePicURL },
+    });
   } catch (err) {
     console.error("Error in getFullProfile:", err);
     res.status(500).json({ message: "Server error" });
