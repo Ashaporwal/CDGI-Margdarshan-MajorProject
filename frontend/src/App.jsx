@@ -12,8 +12,11 @@ import AlumniProfile from "./pages/alumni/AlumniProfile";
 import PostJob from "./pages/alumni/jobs/PostJob";
 import MyJobs from "./pages/alumni/jobs/MyJobs";
 import EditJob from "./pages/alumni/jobs/EditJob";
+import StudentLayout from "./pages/student/StudentLayout";
+import Notices from "./pages/student/Notice";
+import 
 
-function App() {
+function App(){
   return (
     <BrowserRouter>
       <Routes>
@@ -24,24 +27,24 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Student Routes */}
-        <Route
-          path="/student/dashboard"
+
+        <Route path="/student"
           element={
             <ProtectedRoute role="student">
-              <Dashboard />
+              <StudentLayout />
             </ProtectedRoute>
           }
-        />
+        >
 
-        <Route
-          path="/student/profile"
-          element={
-            <ProtectedRoute role="student">
-              <ProfilePage />
-            </ProtectedRoute>
-          }
-        />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="profile" element={<ProfilePage />} />
+          {/* <Route path="jobs" element={<Jobs />} /> */}
+          {/* <Route path="applications" element={<Applications />} /> */}
+          {/* <Route path="events" element={<Events />} /> */}
+          <Route path="notice" element={<Notices/>}/>
+          <Route path="stories" element={<Stories/>}/>
 
+        </Route>
 
 
         {/* Alumni Layout Route (Parent) */}
