@@ -1,190 +1,6 @@
-// import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import {
-//   FaHome,
-//   FaUsers,
-//   FaUser,
-//   FaBell,
-//   FaSun,
-//   FaMoon,
-//   FaSignOutAlt,
-//   FaTachometerAlt,
-//   FaBriefcase,
-//   FaFileAlt,
-//   FaCalendarAlt,
-//   FaChalkboard,
-//   FaChalkboardTeacher
-
-// } from "react-icons/fa";
-// import API from "../../services/api"; // tumhara axios instance
-
-// const Dashboard = () => {
-//   const navigate = useNavigate();
-//   const [darkTheme, setDarkTheme] = useState(false);
-//   const [user, setUser] = useState(null);
-
-//   // Backend se latest profile fetch karo
-//   useEffect(() => {
-//     const fetchUser = async () => {
-//       try {
-//         const token = localStorage.getItem("token");
-//         if (!token) return;
-
-//         const { data } = await API.get("/student/full-profile", {
-//           headers: { Authorization: `Bearer ${token}` },
-//         });
-
-//         // Merge basic + student profile
-//         setUser({
-//           ...data.user,
-//           ...data.studentProfile,
-//         });
-//       } catch (err) {
-//         console.log("Failed to fetch user profile:", err);
-//       }
-//     };
-
-//     fetchUser();
-//   }, []);
-
-//   const toggleTheme = () => setDarkTheme(!darkTheme);
-
-//   const handleLogout = () => {
-//     localStorage.removeItem("token");
-//     localStorage.removeItem("user");
-//     navigate("/login");
-//   };
-
-//   const menuItems = [
-//     { name: "Dashboard", icon: <FaTachometerAlt />, path: "/dashboard" },
-//     { name: "Jobs", icon: <FaBriefcase />, path: "/jobs" },
-//     { name: "Applications", icon: <FaFileAlt />, path: "/applications" },
-//     { name: "Events", icon: <FaCalendarAlt />, path: "/events" },
-//     { name: "Mentorship", icon: <FaChalkboardTeacher />, path: "/mentorship" },
-//     { name: "Alumni Directory", icon: <FaUsers />, path: "/alumni-directory" },
-//     { name: "Profile", icon: <FaUser />, path: "/profile" },
-//   ];
-
-
-//   return (
-//     <div className={`min-h-screen flex ${darkTheme ? "bg-gray-900" : "bg-gray-100"}`}>
-
-//       {/* Sidebar */}
-//       <div className="w-64 bg-white shadow-lg p-6 flex flex-col justify-between">
-//         <div>
-//           <h2 className="text-2xl font-bold text-violet-600 mb-8">
-//             Campus Connect
-//           </h2>
-//           <div className="space-y-2">
-//             {menuItems.map((item) => (
-//               <div
-//                 key={item.name}
-//                 onClick={() => navigate(item.path)}
-//                 className="flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer 
-//                 hover:bg-violet-100 transition duration-200 text-gray-700 font-medium"
-//               >
-//                 {item.icon}
-//                 <span>{item.name}</span>
-//               </div>
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Logout Button */}
-//         <button
-//           onClick={handleLogout}
-//           className="flex items-center justify-center gap-2 py-3 
-//           bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition duration-300"
-//         >
-//           <FaSignOutAlt />
-//           Logout
-//         </button>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="flex-1 flex flex-col">
-
-//         {/* Navbar */}
-//         <div
-//           className={`h-16 px-8 flex items-center justify-between shadow-sm 
-//           ${darkTheme ? "bg-gray-800 text-white" : "bg-white"}`}
-//         >
-//           <h2 className="text-xl font-semibold text-violet-600">
-//             Dashboard
-//           </h2>
-
-//           <div className="flex items-center gap-6">
-//             {/* Theme Toggle */}
-//             <button onClick={toggleTheme} className="text-lg">
-//               {darkTheme ? <FaSun /> : <FaMoon />}
-//             </button>
-
-//             {/* Notification */}
-//             <button className="text-lg">
-//               <FaBell />
-//             </button>
-
-//             {/* Profile */}
-//             {user && (
-//               <div
-//                 onClick={() => navigate("/profile")}
-//                 className="flex items-center gap-3 cursor-pointer"
-//               >
-//                 <span className="font-medium">{user.firstName || user.name}</span>
-
-//                 <img
-//                   src={
-//                     user.resume        // backend se jo file upload hui hai uska field
-//                       ? `http://localhost:5000/uploads/${user.resume}`
-//                       : "/default-avatar.png"
-//                   }
-//                   alt="profile"
-//                   className="w-10 h-10 rounded-full object-cover border"
-//                 />
-//               </div>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Content Area */}
-//         <div
-//           className={`flex-1 p-10 ${darkTheme ? "text-white" : "text-gray-800"}`}
-//         >
-//           <h2 className="text-3xl font-bold mb-4">
-//             Welcome to Dashboard 👋
-//           </h2>
-//           <p className="text-gray-500">
-//             Select any menu item from the sidebar to navigate.
-//           </p>
-
-//           {/* Example Cards */}
-//           <div className="grid grid-cols-3 gap-6 mt-10">
-//             <div className="bg-white shadow-md rounded-2xl p-6">
-//               <h3 className="text-lg font-semibold text-violet-600">Total Users</h3>
-//               <p className="text-3xl font-bold mt-2">124</p>
-//             </div>
-//             <div className="bg-white shadow-md rounded-2xl p-6">
-//               <h3 className="text-lg font-semibold text-violet-600">Active Sessions</h3>
-//               <p className="text-3xl font-bold mt-2">18</p>
-//             </div>
-//             <div className="bg-white shadow-md rounded-2xl p-6">
-//               <h3 className="text-lg font-semibold text-violet-600">Notifications</h3>
-//               <p className="text-3xl font-bold mt-2">5</p>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default Dashboard;
-
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FaHome,
   FaUsers,
   FaUser,
   FaBell,
@@ -195,9 +11,7 @@ import {
   FaBriefcase,
   FaFileAlt,
   FaCalendarAlt,
-  FaChalkboard,
   FaChalkboardTeacher
-
 } from "react-icons/fa";
 import API from "../../services/api"; // tumhara axios instance
 
@@ -247,7 +61,6 @@ const Dashboard = () => {
     { name: "Alumni Directory", icon: <FaUsers />, path: "/alumni-directory" },
     { name: "Profile", icon: <FaUser />, path: "/profile" },
   ];
-
 
   return (
     <div className={`min-h-screen flex ${darkTheme ? "bg-gray-900" : "bg-gray-100"}`}>
@@ -315,15 +128,25 @@ const Dashboard = () => {
               >
                 <span className="font-medium">{user.firstName || user.name}</span>
 
-                <img
+                {/* <img
                   src={
-                    user.resume        // backend se jo file upload hui hai uska field
-                      ? `http://localhost:5000/uploads/${user.resume}`
-                      : "/default-avatar.png"
+                    user.profilePic
+                      ? `http://localhost:5000/uploads/${user.profilePic}`
+                      : "https://i.gifer.com/YCZH.gif" // animated default avatar
                   }
                   alt="profile"
                   className="w-10 h-10 rounded-full object-cover border"
-                />
+                /> */}
+<img
+  src={
+    user.profilePic || user.photo || "https://i.gifer.com/YCZH.gif"
+  }
+  alt="profile"
+  className="w-10 h-10 rounded-full object-cover border"
+/>
+
+
+
               </div>
             )}
           </div>
