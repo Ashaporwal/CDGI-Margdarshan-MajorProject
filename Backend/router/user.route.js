@@ -1,48 +1,48 @@
-import express from "express";
-import {
-  changePassword,
-  get,
-  login,
-  logout,
-  register,
-  // updateProfile,
-  updateUserProfile
-} from "../controller/user.controller.js";
-import { protect } from "../middleware/auth.middleware.js";
-import { upload } from "../middleware/multer.js";
+// import express from "express";
+// import {
+//   changePassword,
+//   get,
+//   login,
+//   logout,
+//   register,
+//   // updateProfile,
+//   updateUserProfile
+// } from "../controller/user.controller.js";
+// import { protect } from "../middleware/auth.middleware.js";
+// import { upload } from "../middleware/multer.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.post("/register", register);
-router.post("/login", login);
-router.get("/get", protect, get);
+// router.post("/register", register);
+// router.post("/login", login);
+// router.get("/get", protect, get);
 
 
-// router.put(
-//   "/profile",
-//   protect,
-//   upload.single("profilePic"), // IMPORTANT
-//   updateProfile
+// // router.put(
+// //   "/profile",
+// //   protect,
+// //   upload.single("profilePic"), // IMPORTANT
+// //   updateProfile
+// // );
+
+
+// router.put("/profile",protect,upload.single("profilePic"),
+// updateUserProfile
 // );
 
 
-router.put("/profile",protect,upload.single("profilePic"),
-updateUserProfile
-);
+// // router.put(
+// //   "/profile",
+// //   protect,
+// //   upload.fields([
+// //     { name: "resume", maxCount: 1 },
+// //     { name: "profilePic", maxCount: 1 },
+// //   ]),
+// //   updateProfile
+// // );
 
 
-// router.put(
-//   "/profile",
-//   protect,
-//   upload.fields([
-//     { name: "resume", maxCount: 1 },
-//     { name: "profilePic", maxCount: 1 },
-//   ]),
-//   updateProfile
-// );
+// router.put("/changePassword", protect, changePassword);
+// router.post("/logout", protect, logout);
 
-
-router.put("/changePassword", protect, changePassword);
-router.post("/logout", protect, logout);
-
-export default router;
+// export default router;
