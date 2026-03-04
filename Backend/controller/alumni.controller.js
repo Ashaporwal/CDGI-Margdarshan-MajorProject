@@ -3,24 +3,28 @@ import AlumniProfile from "../model/alumni.model.js";
 /* CREATE PROFILE */
 export const createAlumniProfile = async (req, res) => {
   try {
-
+    console.log("REQ BODY:", req.body);
+    console.log("REQ USER:", req.user);
+console.log("USER ROLE:", req.user.role);
     if (req.user.role !== "alumni") {
       return res.status(403).json({ message: "Only alumni allowed" });
     }
 
-    const existing = await AlumniProfile.findOne({ userId: req.user.id });
+    const existing = await AlumniProfile.findOne({ userId: req.user._id });
     if (existing) {
       return res.status(400).json({ message: "Profile already exists" });
     }
 
     const profile = await AlumniProfile.create({
-      userId: req.user.id,
+      userId: req.user._id,
       ...req.body
     });
 
     res.status(201).json(profile);
 
   } catch (error) {
+    // console.log(error);
+    console.log("CREATE ERROR:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -29,8 +33,7 @@ export const createAlumniProfile = async (req, res) => {
 /* GET MY PROFILE */
 export const getMyAlumniProfile = async (req, res) => {
   try {
-
-    const profile = await AlumniProfile.findOne({ userId: req.user.id })
+    const profile = await AlumniProfile.findOne({ userId: req.user._id })
       .populate("userId", "name email department graduationYear");
 
     if (!profile) {
@@ -38,8 +41,8 @@ export const getMyAlumniProfile = async (req, res) => {
     }
 
     res.status(200).json(profile);
-
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -48,9 +51,8 @@ export const getMyAlumniProfile = async (req, res) => {
 /* UPDATE PROFILE */
 export const updateAlumniProfile = async (req, res) => {
   try {
-
     const profile = await AlumniProfile.findOneAndUpdate(
-      { userId: req.user.id },
+      { userId: req.user._id },
       req.body,
       { new: true }
     );
@@ -62,6 +64,7 @@ export const updateAlumniProfile = async (req, res) => {
     res.status(200).json(profile);
 
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
@@ -81,6 +84,7 @@ export const getAllAlumniProfiles = async (req, res) => {
     res.status(200).json(profiles);
 
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: "Server error" });
   }
 };
