@@ -12,8 +12,19 @@ import { validate } from "../middleware/validate.js";
 
 const router = express.Router();
 
+// router.post(
+//   "/alumni",
+//   protect,
+
+//   body("company", "Company is required").notEmpty(),
+//   body("designation", "Designation is required").notEmpty(),
+//   body("experienceYears", "Experience must be number").isNumeric(),
+
+//   validate,
+//   createAlumniProfile
+// );
 router.post(
-  "/alumni",
+  "/",
   protect,
 
   body("company", "Company is required").notEmpty(),
@@ -24,22 +35,38 @@ router.post(
   createAlumniProfile
 );
 
+// router.get(
+//   "/alumni/me",
+//   protect,
+//   getMyAlumniProfile
+// );
+
 
 router.get(
-  "/alumni/me",
+  "/me",
   protect,
   getMyAlumniProfile
 );
 
+// router.put(
+//   "/alumni",
+//   protect,
+//   updateAlumniProfile
+// );
+
 router.put(
-  "/alumni",
+  "/",
   protect,
   updateAlumniProfile
 );
 
-
+// router.get(
+//   "/alumni/all",
+//   protect,
+//   getAllAlumniProfiles
+// );
 router.get(
-  "/alumni/all",
+  "/all",
   protect,
   getAllAlumniProfiles
 );
