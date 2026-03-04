@@ -1,6 +1,6 @@
 import { useState } from "react";
 import API from "../../../services/api";
-import { toast } from "react-toastify";
+import { toast,ToastContainer } from "react-toastify";
 
 function PostJob() {
   const [loading, setLoading] = useState(false);
@@ -171,8 +171,10 @@ function PostJob() {
           >
             <option value="">Select Experience</option>
             <option value="Fresher">Fresher</option>
+            <option value="6 month">6month</option>
             <option value="1-2 Years">1-2 Years</option>
-            <option value="3-5 Years">3-5 Years</option>
+            <option value="1-2 Years">2+ Years</option>
+            <option value="3-5 Years">3+ Years</option>
             <option value="5+ Years">5+ Years</option>
           </select>
 
@@ -205,6 +207,7 @@ function PostJob() {
         </button>
 
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

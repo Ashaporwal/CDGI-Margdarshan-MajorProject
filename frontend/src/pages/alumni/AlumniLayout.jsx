@@ -11,6 +11,7 @@ import {
     FaBell,
     FaMoon,
     FaSun,
+    FaSignOutAlt,
 } from "react-icons/fa";
 
 function AlumniLayout() {
@@ -89,7 +90,7 @@ function AlumniLayout() {
                 ))}
 
                 {/* Logout directly under Profile */}
-                <button onClick={handleLogout} className="mt-6 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition" > Logout </button>
+                <button onClick={handleLogout} className="mt-6 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition" ><FaSignOutAlt /> Logout </button>
             </div>
 
             {/* Right Side */}

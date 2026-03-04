@@ -275,10 +275,12 @@ function EditJob() {
               className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-violet-500 outline-none"
             >
               <option value="">Select Experience</option>
-              <option value="Fresher">Fresher</option>
-              <option value="1-2 Years">1-2 Years</option>
-              <option value="3-5 Years">3-5 Years</option>
-              <option value="5+ Years">5+ Years</option>
+            <option value="Fresher">Fresher</option>
+            <option value="6 month">6month</option>
+            <option value="1-2 Years">1-2 Years</option>
+            <option value="1-2 Years">2+ Years</option>
+            <option value="3-5 Years">3+ Years</option>
+            <option value="5+ Years">5+ Years</option>
             </select>
           </div>
 
