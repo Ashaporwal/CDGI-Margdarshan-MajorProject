@@ -272,20 +272,19 @@
 
 // export default Login;
 
+
+
 import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { FiEye, FiEyeOff } from "react-icons/fi";
+import "react-toastify/dist/ReactToastify.css";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -297,25 +296,22 @@ function Login() {
     setLoading(true);
 
     try {
-      console.log("api hit");
       const res = await API.post("/login", form);
-
+      const user = res.data.user;
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", JSON.stringify(res.data.user));
-
+      localStorage.setItem("user", JSON.stringify(user));
       toast.success("Login successful 🎉");
 
       setTimeout(() => {
-        navigate(
-          res.data.user.role === "student"
-            ? "/student/dashboard"
-            : res.data.user.role === "alumni"
-              ? "/dashboard"
-              : "/dashboard"
-        );
-      }, 1000);
+        const role = user.role.toLowerCase().trim();
+        if (role === "student") navigate("/student/dashboard");
+        else if (role === "alumni") navigate("/alumni/dashboard");
+        // else if (role === "alumni") navigate("/alumni-dashboard");
+        else if (role === "admin") navigate("/admin/dashboard");
+      }, 800);
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || err.message || "Login failed";
+      toast.error(msg);
     }
 
     setLoading(false);
@@ -323,9 +319,7 @@ function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-pink-50 px-6">
-
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 border">
-
         <h2 className="text-3xl font-bold text-center text-violet-600 mb-2">
           Welcome Back
         </h2>
@@ -334,7 +328,6 @@ function Login() {
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-5">
-
           <input
             name="email"
             type="email"
@@ -344,7 +337,6 @@ function Login() {
             className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
           />
 
-          {/* PASSWORD FIELD */}
           <div className="relative">
             <input
               type={showPass ? "text" : "password"}
@@ -355,7 +347,6 @@ function Login() {
               required
               className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 pr-12"
             />
-
             <span
               onClick={() => setShowPass(!showPass)}
               className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
@@ -393,3 +384,127 @@ shadow-md transition duration-300"
 }
 
 export default Login;
+
+
+
+// import { useState } from "react";
+// import API from "../services/api";
+// import { useNavigate, Link } from "react-router-dom";
+// import { toast, ToastContainer } from "react-toastify";
+// import { FiEye, FiEyeOff } from "react-icons/fi";
+
+// function Login() {
+//   const navigate = useNavigate();
+
+//   const [form, setForm] = useState({
+//     email: "",
+//     password: "",
+//   });
+
+//   const [showPass, setShowPass] = useState(false);
+//   const [loading, setLoading] = useState(false);
+
+//   const handleChange = (e) =>
+//     setForm({ ...form, [e.target.name]: e.target.value });
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+
+//     try {
+//       console.log("api hit");
+//       const res = await API.post("/login", form);
+
+//       localStorage.setItem("token", res.data.token);
+//       localStorage.setItem("user", JSON.stringify(res.data.user));
+
+//       toast.success("Login successful 🎉");
+
+//       setTimeout(() => {
+//         navigate(
+//           res.data.user.role === "student"
+//             ? "/student/dashboard"
+//             : res.data.user.role === "alumni"
+//               ? "/dashboard"
+//               : "/dashboard"
+//         );
+//       }, 1000);
+//     } catch (err) {
+//       toast.error(err.response?.data?.message || "Login failed");
+//     }
+
+//     setLoading(false);
+//   };
+
+//   return (
+//     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-pink-50 px-6">
+
+//       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 border">
+
+//         <h2 className="text-3xl font-bold text-center text-violet-600 mb-2">
+//           Welcome Back
+//         </h2>
+//         <p className="text-center text-gray-500 mb-8">
+//           Login to continue your journey
+//         </p>
+
+//         <form onSubmit={handleSubmit} className="space-y-5">
+
+//           <input
+//             name="email"
+//             type="email"
+//             placeholder="Email Address"
+//             onChange={handleChange}
+//             required
+//             className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+//           />
+
+//           {/* PASSWORD FIELD */}
+//           <div className="relative">
+//             <input
+//               type={showPass ? "text" : "password"}
+//               name="password"
+//               placeholder="Password"
+//               autoComplete="current-password"
+//               onChange={handleChange}
+//               required
+//               className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 pr-12"
+//             />
+
+//             <span
+//               onClick={() => setShowPass(!showPass)}
+//               className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+//             >
+//               {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+//             </span>
+//           </div>
+
+//           <button
+//             disabled={loading}
+//             className="w-full py-3 rounded-xl text-white font-semibold 
+// bg-gradient-to-r from-violet-500 to-violet-700
+// hover:from-violet-600 hover:to-violet-800
+// shadow-md transition duration-300"
+//           >
+//             {loading ? "Logging in..." : "Login"}
+//           </button>
+//         </form>
+
+//         <div className="mt-6 text-center text-sm text-gray-500">
+//           Don’t have an account?{" "}
+//           <Link to="/register" className="text-violet-600 font-medium">
+//             Register
+//           </Link>
+//           <br />
+//           <Link to="/" className="text-gray-400">
+//             ← Back to Home
+//           </Link>
+//         </div>
+//       </div>
+
+//       <ToastContainer />
+//     </div>
+//   );
+// }
+
+// export default Login;
