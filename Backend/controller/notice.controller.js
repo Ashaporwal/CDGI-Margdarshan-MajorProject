@@ -2,7 +2,12 @@ import { Notice } from "../model/notice.model.js";
 
 export const createNotice = async (req, res) => {
   try {
+    console.log("=== NEW NOTICE POST REQUEST ===");
+    console.log("REQ PATH:", req.path);       // dekhe kis URL se aa rahi hai
+    console.log("REQ BODY:", req.body);       // form ka data
+    console.log("REQ USER:", req.user);       // user info from auth middleware
 
+    
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Only admin can post notice" });
     }
