@@ -30,7 +30,7 @@ const jobSchema = new mongoose.Schema({
 
   skills: [{ type: String }],
 
-  deadline: { type: Date, required: true },
+  deadline: { type: Date, required: false},
 
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
