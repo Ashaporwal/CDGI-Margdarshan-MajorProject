@@ -13,6 +13,15 @@ import { validate } from "../middleware/validate.js";
 
 const router = express.Router();
 
+// router.post(
+//   "/notice",
+//   protect,
+//   body("title").notEmpty(),
+//   body("description").notEmpty(),
+//   validate,
+//   createNotice
+// );
+
 router.post(
   "/notice",
   protect,
@@ -21,7 +30,6 @@ router.post(
   validate,
   createNotice
 );
-
 router.get("/notice", protect, getAllNotices);
 
 
