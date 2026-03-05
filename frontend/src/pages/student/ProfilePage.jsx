@@ -1,504 +1,608 @@
 // import { useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { toast, ToastContainer } from "react-toastify";
 // import API from "../../services/api";
-// import "react-toastify/dist/ReactToastify.css";
-
+// import { toast } from "react-toastify";
+// import Profile from "./Profile";
 // import {
-//   FaTachometerAlt,
-//   FaBriefcase,
+//   FaGraduationCap,
 //   FaFileAlt,
-//   FaCalendarAlt,
-//   FaChalkboardTeacher,
-//   FaUsers,
-//   FaUser,
-//   FaBell,
-//   FaSun,
-//   FaMoon,
-//   FaUpload,
-//   FaSignOutAlt,
+//   FaLink
 // } from "react-icons/fa";
 
 // function ProfilePage() {
-//   const navigate = useNavigate();
-//   const [darkTheme, setDarkTheme] = useState(false);
-//   const [loading, setLoading] = useState(true);
 
-//   const [personal, setPersonal] = useState({ firstName: "", lastName: "", email: "", phone: "" });
-//   const [academic, setAcademic] = useState({ rollNumber: "", department: "", batch: "", cgpa: "", address: "" });
-//   const [skills, setSkills] = useState("");
-//   const [socialLinks, setSocialLinks] = useState({ linkedin: "", github: "", portfolio: "" });
-//   const [profileFile, setProfileFile] = useState(null);
-//   const [resumeFile, setResumeFile] = useState(null);
-//   const [profilePreview, setProfilePreview] = useState(null);
-//   const [resumePreview, setResumePreview] = useState(null);
+//   const [profile, setProfile] = useState({
+//     rollNumber: "",
+//     department: "",
+//     batch: "",
+//     cgpa: "",
+//     address: "",
+//     linkedin: "",
+//     github: "",
+//     portfolio: "",
+//     skills: []
+//   });
 
-//   // ================= FETCH PROFILE ON PAGE LOAD =================
+//   const [resume, setResume] = useState(null);
+//   const [resumeUrl, setResumeUrl] = useState(null);
+
 //   useEffect(() => {
-//     const fetchProfile = async () => {
-//       try {
-//         const { data } = await API.get("/student/full-profile");
-//         const user = data.user;
-//         const profile = data.studentProfile;
-
-//         setPersonal({
-//           firstName: user?.firstName || "",
-//           lastName: user?.lastName || "",
-//           email: user?.email || "",
-//           phone: user?.phone || "",
-//         });
-
-//         setAcademic({
-//           rollNumber: profile?.enrollmentNumber || "",
-//           department: profile?.course || "",
-//           batch: profile?.yearOfStudy || "",
-//           cgpa: profile?.cgpa || "",
-//           address: profile?.address || "",
-//         });
-
-//         setSkills(profile?.skills || "");
-//         setSocialLinks({
-//           linkedin: profile?.linkedin || "",
-//           github: profile?.github || "",
-//           portfolio: profile?.portfolio || "",
-//         });
-
-//         setProfilePreview(profile?.profilePic || null);
-//         setResumePreview(profile?.resume || null);
-
-//         setLoading(false);
-//       } catch (error) {
-//         console.log(error);
-//         toast.error("Failed to load profile");
-//         setLoading(false);
-//       }
-//     };
 
 //     fetchProfile();
+
 //   }, []);
 
-//   // ================= SAVE PROFILE =================
-//   const handleSaveChanges = async () => {
+//   const fetchProfile = async () => {
+
 //     try {
-//       // ===== USER UPDATE =====
-//       const userForm = new FormData();
-//       userForm.append("firstName", personal.firstName);
-//       userForm.append("lastName", personal.lastName);
-//       userForm.append("phone", personal.phone);
-//       if (profileFile) userForm.append("profilePic", profileFile);
 
-//       await API.put("/profile", userForm, {
-//         headers: { "Content-Type": "multipart/form-data" },
+//       const { data } = await API.get("/api/student/full-profile");
+
+//       const student = data.studentProfile;
+
+//       setProfile({
+//         rollNumber: student?.enrollmentNumber || "",
+//         department: student?.course || "",
+//         batch: student?.yearOfStudy || "",
+//         cgpa: student?.cgpa || "",
+//         address: student?.address || "",
+//         linkedin: student?.linkedin || "",
+//         github: student?.github || "",
+//         portfolio: student?.portfolio || "",
+//         skills: student?.skills || []
 //       });
 
-//       // ===== STUDENT UPDATE =====
-//       const studentForm = new FormData();
-//       studentForm.append("enrollmentNumber", academic.rollNumber);
-//       studentForm.append("course", academic.department);
-//       studentForm.append("yearOfStudy", academic.batch);
-//       studentForm.append("cgpa", academic.cgpa);
-//       studentForm.append("address", academic.address);
-//       studentForm.append("skills", skills);
-//       studentForm.append("linkedin", socialLinks.linkedin);
-//       studentForm.append("github", socialLinks.github);
-//       studentForm.append("portfolio", socialLinks.portfolio);
-//       if (resumeFile) studentForm.append("resume", resumeFile);
+//       setResumeUrl(student?.resumeUrl);
 
-//       await API.put("/student/profile", studentForm, {
-//         headers: { "Content-Type": "multipart/form-data" },
-//       });
+//     } catch {
 
-//       if (profileFile) setProfilePreview(URL.createObjectURL(profileFile));
-//       if (resumeFile) setResumePreview(resumeFile.name);
+//       toast.error("Failed to load profile");
 
-//       toast.success("Profile Updated Successfully");
-//     } catch (err) {
-//       console.log(err);
-//       toast.error("Update Failed");
 //     }
+
 //   };
 
-//   const toggleTheme = () => setDarkTheme(!darkTheme);
-//   const handleLogout = () => { localStorage.clear(); navigate("/login"); };
+//   const handleChange = (e) => {
 
-//   const menuItems = [
-//     { name: "Dashboard", icon: <FaTachometerAlt />, path: "/dashboard" },
-//     { name: "Jobs", icon: <FaBriefcase />, path: "/jobs" },
-//     { name: "Applications", icon: <FaFileAlt />, path: "/applications" },
-//     { name: "Events", icon: <FaCalendarAlt />, path: "/events" },
-//     { name: "Mentorship", icon: <FaChalkboardTeacher />, path: "/mentorship" },
-//     { name: "Alumni Directory", icon: <FaUsers />, path: "/alumni-directory" },
-//     { name: "Profile", icon: <FaUser />, path: "/profile" },
-//   ];
+//     setProfile({
+//       ...profile,
+//       [e.target.name]: e.target.value
+//     });
 
-//   if (loading) {
-//     return <div className="flex justify-center items-center h-screen text-gray-600">Loading Profile...</div>;
-//   }
+//   };
+
+//   const handleSave = async () => {
+
+//     try {
+
+//       await API.put("/api/student/profile", {
+//         ...profile
+//       });
+
+//       if (resume) {
+
+//         const formData = new FormData();
+//         formData.append("resume", resume);
+
+//         const { data } = await API.put("/api/student/upload-resume", formData);
+
+//         setResumeUrl(data.resumeUrl);
+
+//       }
+
+//       toast.success("Profile updated");
+
+//     } catch {
+
+//       toast.error("Update failed");
+
+//     }
+
+//   };
 
 //   return (
-//     <div className={`min-h-screen flex ${darkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-//       {/* Sidebar */}
-//       <div className={`w-64 shadow-lg p-6 flex flex-col justify-between fixed h-screen ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
+
+//     <div className="space-y-6">
+
+//       <Profile />
+
+
+//      {/* PERSONAL INFORMATION */}
+
+// <div className="bg-white rounded-xl shadow p-6">
+
+//   <h2 className="font-semibold mb-4">
+//     Personal Information
+//   </h2>
+
+//   <div className="grid grid-cols-2 gap-4">
+
+//     <input
+//       value={user?.name || ""}
+//       readOnly
+//       className="border p-3 rounded bg-gray-100"
+//     />
+
+//     <input
+//       value={user?.email || ""}
+//       readOnly
+//       className="border p-3 rounded bg-gray-100"
+//     />
+
+//     <input
+//       value={user?.department || ""}
+//       readOnly
+//       className="border p-3 rounded bg-gray-100"
+//     />
+
+//     <input
+//       value={user?.graduationYear || ""}
+//       readOnly
+//       className="border p-3 rounded bg-gray-100"
+//     />
+
+//   </div>
+
+// </div>
+
+//       <div className="flex justify-between items-center">
+
 //         <div>
-//           <h2 className="text-2xl font-bold text-violet-600 mb-8">Campus Connect</h2>
-//           <ul className="space-y-2">
-//             {menuItems.map(item => (
-//               <li key={item.name} onClick={() => navigate(item.path)}
-//                 className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer font-medium hover:bg-violet-100 transition duration-200 ${item.name === "Profile" ? "bg-violet-50 text-violet-600" : ""}`}>
-//                 {item.icon}<span>{item.name}</span>
-//               </li>
-//             ))}
-//           </ul>
+
+//           <h1 className="text-2xl font-bold">
+//             My Profile
+//           </h1>
+
+//           <p className="text-gray-500 text-sm">
+//             Manage your profile information
+//           </p>
+
 //         </div>
-//         <button onClick={handleLogout} className="flex items-center justify-center gap-2 py-3 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition duration-300">
-//           <FaSignOutAlt /> Logout
+
+//         <button
+//           onClick={handleSave}
+//           className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+//         >
+
+//           Save Changes
+
 //         </button>
-//       </div>
-
-//       {/* Main Content */}
-//       <div className="flex-1 ml-64 p-10 space-y-8 overflow-y-auto">
-
-//         {/* Navbar */}
-//         <div className={`flex justify-between items-center mb-6 ${darkTheme ? "bg-gray-800 text-white p-4 rounded-2xl shadow-md" : "bg-white p-4 rounded-2xl shadow-md"}`}>
-//           <h2 className="text-xl font-semibold text-violet-600">My Profile</h2>
-//           <div className="flex items-center gap-4">
-//             <button onClick={toggleTheme}>{darkTheme ? <FaSun /> : <FaMoon />}</button>
-//             <FaBell />
-//             <span>{personal.firstName}</span>
-//           </div>
-//         </div>
-
-//         {/* Profile Summary */}
-//         <div className={`rounded-2xl shadow-xl p-8 flex justify-between items-center ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <div className="flex items-center gap-6">
-//             <div className="w-20 h-20 rounded-full bg-violet-600 text-white flex items-center justify-center text-2xl font-bold">
-//               {personal.firstName?.charAt(0)}{personal.lastName?.charAt(0)}
-//             </div>
-//             <div>
-//               <h2 className="text-xl font-semibold">{personal.firstName} {personal.lastName}</h2>
-//               <p className="text-gray-500">{academic.department} • Batch {academic.batch}</p>
-//               <p className="text-gray-500">{personal.email}</p>
-//               <p className="text-gray-500">{personal.phone}</p>
-//             </div>
-//           </div>
-//           <button onClick={handleSaveChanges} className="px-4 py-2 text-sm font-medium bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition">
-//             Save
-//           </button>
-//         </div>
-
-//         {/* Personal Info */}
-//         <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//             <input type="text" placeholder="First Name" value={personal.firstName} onChange={e => setPersonal({...personal, firstName: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="text" placeholder="Last Name" value={personal.lastName} onChange={e => setPersonal({...personal, lastName: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="email" placeholder="Email" value={personal.email} disabled className="p-2 border rounded-md w-full bg-gray-200"/>
-//             <input type="text" placeholder="Phone" value={personal.phone} onChange={e => setPersonal({...personal, phone: e.target.value})} className="p-2 border rounded-md w-full"/>
-//           </div>
-//         </div>
-
-//         {/* Academic Info */}
-//         <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <h3 className="text-lg font-semibold mb-4">Academic Information</h3>
-//           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-//             <input type="text" placeholder="Enrollment Number" value={academic.rollNumber} onChange={e => setAcademic({...academic, rollNumber: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="text" placeholder="Department" value={academic.department} onChange={e => setAcademic({...academic, department: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="number" placeholder="Batch" value={academic.batch} onChange={e => setAcademic({...academic, batch: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="number" placeholder="CGPA" value={academic.cgpa} onChange={e => setAcademic({...academic, cgpa: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="text" placeholder="Address" value={academic.address} onChange={e => setAcademic({...academic, address: e.target.value})} className="p-2 border rounded-md w-full md:col-span-2"/>
-//           </div>
-//         </div>
-
-//         {/* Skills */}
-//         <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <h3 className="text-lg font-semibold mb-4">Skills</h3>
-//           <textarea placeholder="Skills" value={skills} onChange={e => setSkills(e.target.value)} className="p-2 border rounded-md w-full"></textarea>
-//         </div>
-
-//         {/* Profile Photo */}
-//         <div className={`p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center gap-4 ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <div>
-//             <h3 className="text-lg font-semibold mb-2">Profile Photo</h3>
-//             {profilePreview && <img src={profilePreview} alt="Profile" className="w-32 h-32 rounded-full object-cover mb-2"/>}
-//             <input type="file" onChange={e => setProfileFile(e.target.files[0])} />
-//           </div>
-
-//           {/* Resume */}
-//           <div>
-//             <h3 className="text-lg font-semibold mb-2">Resume</h3>
-//             {resumePreview && <p>{resumePreview}</p>}
-//             <input type="file" onChange={e => setResumeFile(e.target.files[0])} />
-//           </div>
-//         </div>
-
-//         {/* Social Links */}
-//         <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-//           <h3 className="text-lg font-semibold mb-4">Social Links</h3>
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-//             <input type="text" placeholder="LinkedIn" value={socialLinks.linkedin} onChange={e => setSocialLinks({...socialLinks, linkedin: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="text" placeholder="GitHub" value={socialLinks.github} onChange={e => setSocialLinks({...socialLinks, github: e.target.value})} className="p-2 border rounded-md w-full"/>
-//             <input type="text" placeholder="Portfolio" value={socialLinks.portfolio} onChange={e => setSocialLinks({...socialLinks, portfolio: e.target.value})} className="p-2 border rounded-md w-full"/>
-//           </div>
-//         </div>
 
 //       </div>
 
-//       <ToastContainer />
+//       {/* ACADEMIC INFO */}
+
+//       <div className="bg-white rounded-xl shadow p-6">
+
+//         <h2 className="flex items-center gap-2 font-semibold mb-4">
+
+//           <FaGraduationCap className="text-purple-500" />
+
+//           Academic Information
+
+//         </h2>
+
+//         <div className="grid grid-cols-2 gap-4">
+
+//           <input
+//             name="rollNumber"
+//             placeholder="Roll Number"
+//             value={profile.rollNumber}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//           <input
+//             name="department"
+//             placeholder="Department"
+//             value={profile.department}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//           <input
+//             name="batch"
+//             placeholder="Batch Year"
+//             value={profile.batch}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//           <input
+//             name="cgpa"
+//             placeholder="CGPA"
+//             value={profile.cgpa}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//         </div>
+
+//         <textarea
+//           name="address"
+//           placeholder="Address"
+//           value={profile.address}
+//           onChange={handleChange}
+//           className="border p-3 rounded w-full mt-4"
+//         />
+
+//       </div>
+
+//       {/* RESUME */}
+
+//       <div className="bg-white rounded-xl shadow p-6">
+
+//         <h2 className="flex items-center gap-2 font-semibold mb-4">
+
+//           <FaFileAlt className="text-orange-500" />
+
+//           Resume
+
+//         </h2>
+
+//         <div className="border-2 border-dashed p-8 text-center rounded-lg">
+
+//           <input
+//             type="file"
+//             accept=".pdf"
+//             onChange={(e) => setResume(e.target.files[0])}
+//           />
+
+//           {resumeUrl && (
+//             <div className="mt-3 flex items-center gap-3">
+//               <span className="text-sm text-gray-600">
+//                 Current Resume Uploaded
+//               </span>
+
+//               <a
+//                 href={`http://localhost:3000/${resumeUrl}`}
+//                 target="_blank"
+//                 rel="noreferrer"
+//                 className="text-blue-600 underline"
+//               >
+//                 View Resume
+//               </a>
+//             </div>
+//           )}
+
+//         </div>
+
+//       </div>
+
+//       {/* SOCIAL LINKS */}
+
+//       <div className="bg-white rounded-xl shadow p-6">
+
+//         <h2 className="flex items-center gap-2 font-semibold mb-4">
+
+//           <FaLink className="text-green-500" />
+
+//           Social Links
+
+//         </h2>
+
+//         <div className="grid grid-cols-1 gap-4">
+
+//           <input
+//             name="linkedin"
+//             placeholder="LinkedIn URL"
+//             value={profile.linkedin}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//           <input
+//             name="github"
+//             placeholder="GitHub URL"
+//             value={profile.github}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//           <input
+//             name="portfolio"
+//             placeholder="Portfolio URL"
+//             value={profile.portfolio}
+//             onChange={handleChange}
+//             className="border p-3 rounded"
+//           />
+
+//         </div>
+
+//       </div>
+
 //     </div>
+
 //   );
+
 // }
 
 // export default ProfilePage;
-
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
 import API from "../../services/api";
-import "react-toastify/dist/ReactToastify.css";
-
-import {
-  FaTachometerAlt,
-  FaBriefcase,
-  FaFileAlt,
-  FaCalendarAlt,
-  FaChalkboardTeacher,
-  FaUsers,
-  FaUser,
-  FaBell,
-  FaSun,
-  FaMoon,
-  FaUpload,
-  FaSignOutAlt,
-} from "react-icons/fa";
+import { toast } from "react-toastify";
+import Profile from "./Profile";
+import { FaGraduationCap, FaFileAlt, FaLink, FaUser } from "react-icons/fa";
 
 function ProfilePage() {
-  const navigate = useNavigate();
-  const [darkTheme, setDarkTheme] = useState(false);
-  const [loading, setLoading] = useState(true);
 
-  const [personal, setPersonal] = useState({ firstName: "", lastName: "", email: "", phone: "" });
-  const [academic, setAcademic] = useState({ rollNumber: "", department: "", batch: "", cgpa: "", address: "" });
-  const [skills, setSkills] = useState("");
-  const [socialLinks, setSocialLinks] = useState({ linkedin: "", github: "", portfolio: "" });
-  const [profileFile, setProfileFile] = useState(null);
-  const [resumeFile, setResumeFile] = useState(null);
-  const [profilePreview, setProfilePreview] = useState(null);
-  const [resumePreview, setResumePreview] = useState(null);
+  const [user, setUser] = useState(null);
 
-  // ================= FETCH PROFILE ON PAGE LOAD =================
+  const [profile, setProfile] = useState({
+    rollNumber: "",
+    department: "",
+    batch: "",
+    cgpa: "",
+    address: "",
+    linkedin: "",
+    github: "",
+    portfolio: "",
+  });
+
+  const [resume, setResume] = useState(null);
+  const [resumeUrl, setResumeUrl] = useState(null);
+
   useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const { data } = await API.get("/student/full-profile");
-        const user = data.user;
-        const profile = data.studentProfile;
-
-        setPersonal({
-          firstName: user?.firstName || "",
-          lastName: user?.lastName || "",
-          email: user?.email || "",
-          phone: user?.phone || "",
-        });
-
-        setAcademic({
-          rollNumber: profile?.enrollmentNumber || "",
-          department: profile?.course || "",
-          batch: profile?.yearOfStudy || "",
-          cgpa: profile?.cgpa || "",
-          address: profile?.address || "",
-        });
-
-        setSkills(profile?.skills || "");
-        setSocialLinks({
-          linkedin: profile?.linkedin || "",
-          github: profile?.github || "",
-          portfolio: profile?.portfolio || "",
-        });
-
-        setProfilePreview(profile?.profilePic || null);
-        setResumePreview(profile?.resume || null);
-
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        toast.error("Failed to load profile");
-        setLoading(false);
-      }
-    };
-
     fetchProfile();
   }, []);
 
-  // ================= SAVE PROFILE =================
-  const handleSaveChanges = async () => {
+  const fetchProfile = async () => {
+
     try {
-      // ===== USER UPDATE =====
-      const userForm = new FormData();
-      userForm.append("firstName", personal.firstName);
-      userForm.append("lastName", personal.lastName);
-      userForm.append("phone", personal.phone);
-      if (profileFile) userForm.append("profilePic", profileFile);
 
-      await API.put("/profile", userForm, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const { data } = await API.get("/api/student/full-profile");
+
+      setUser(data.user);
+
+      const student = data.studentProfile;
+
+      setProfile({
+        rollNumber: student?.enrollmentNumber || "",
+        department: student?.course || "",
+        batch: student?.yearOfStudy || "",
+        cgpa: student?.cgpa || "",
+        address: student?.address || "",
+        linkedin: student?.linkedin || "",
+        github: student?.github || "",
+        portfolio: student?.portfolio || "",
       });
 
-      // ===== STUDENT UPDATE =====
-      const studentForm = new FormData();
-      studentForm.append("enrollmentNumber", academic.rollNumber);
-      studentForm.append("course", academic.department);
-      studentForm.append("yearOfStudy", academic.batch);
-      studentForm.append("cgpa", academic.cgpa);
-      studentForm.append("address", academic.address);
-      studentForm.append("skills", skills);
-      studentForm.append("linkedin", socialLinks.linkedin);
-      studentForm.append("github", socialLinks.github);
-      studentForm.append("portfolio", socialLinks.portfolio);
-      if (resumeFile) studentForm.append("resume", resumeFile);
+      setResumeUrl(student?.resumeUrl);
 
-      await API.put("/student/profile", studentForm, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
-      if (profileFile) setProfilePreview(URL.createObjectURL(profileFile));
-      if (resumeFile) setResumePreview(resumeFile.name);
-
-      toast.success("Profile Updated Successfully");
-    } catch (err) {
-      console.log(err);
-      toast.error("Update Failed");
+    } catch {
+      toast.error("Failed to load profile");
     }
+
   };
 
-  const toggleTheme = () => setDarkTheme(!darkTheme);
-  const handleLogout = () => { localStorage.clear(); navigate("/login"); };
+  const handleChange = (e) => {
+    setProfile({
+      ...profile,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const menuItems = [
-    { name: "Dashboard", icon: <FaTachometerAlt />, path: "/dashboard" },
-    { name: "Jobs", icon: <FaBriefcase />, path: "/jobs" },
-    { name: "Applications", icon: <FaFileAlt />, path: "/applications" },
-    { name: "Events", icon: <FaCalendarAlt />, path: "/events" },
-    { name: "Mentorship", icon: <FaChalkboardTeacher />, path: "/mentorship" },
-    { name: "Alumni Directory", icon: <FaUsers />, path: "/alumni-directory" },
-    { name: "Profile", icon: <FaUser />, path: "/profile" },
-  ];
+  const handleSave = async () => {
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen text-gray-600">Loading Profile...</div>;
-  }
+    try {
+
+      await API.put("/api/student/profile", profile);
+
+      if (resume) {
+
+        const formData = new FormData();
+        formData.append("resume", resume);
+
+        const { data } = await API.put("/api/student/upload-resume", formData);
+
+        setResumeUrl(data.resumeUrl);
+      }
+
+      toast.success("Profile updated");
+
+    } catch {
+      toast.error("Update failed");
+    }
+
+  };
 
   return (
-    <div className={`min-h-screen flex ${darkTheme ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      {/* Sidebar */}
-      <div className={`w-64 shadow-lg p-6 flex flex-col justify-between fixed h-screen ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-        <div>
-          <h2 className="text-2xl font-bold text-violet-600 mb-8">Campus Connect</h2>
-          <ul className="space-y-2">
-            {menuItems.map(item => (
-              <li key={item.name} onClick={() => navigate(item.path)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer font-medium hover:bg-violet-100 transition duration-200 ${item.name === "Profile" ? "bg-violet-50 text-violet-600" : ""}`}>
-                {item.icon}<span>{item.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <button onClick={handleLogout} className="flex items-center justify-center gap-2 py-3 bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition duration-300">
-          <FaSignOutAlt /> Logout
+
+    <div className="space-y-6">
+
+      <Profile />
+
+      {/* HEADER */}
+
+      <div className="flex justify-between items-center">
+
+        <button
+          onClick={handleSave}
+          className="px-6 py-2 bg-violet-600 text-white rounded-lg hover:bg-violet-700"
+        >
+          Save Changes
         </button>
+
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 ml-64 p-10 space-y-8 overflow-y-auto">
+      {/* PERSONAL INFORMATION */}
 
-        {/* Navbar */}
-        <div className={`flex justify-between items-center mb-6 ${darkTheme ? "bg-gray-800 text-white p-4 rounded-2xl shadow-md" : "bg-white p-4 rounded-2xl shadow-md"}`}>
-          <h2 className="text-xl font-semibold text-violet-600">My Profile</h2>
-          <div className="flex items-center gap-4">
-            <button onClick={toggleTheme}>{darkTheme ? <FaSun /> : <FaMoon />}</button>
-            <FaBell />
-            <span>{personal.firstName}</span>
-          </div>
-        </div>
+      <div className="bg-white rounded-xl shadow p-6">
 
-        {/* Profile Summary */}
-        <div className={`rounded-2xl shadow-xl p-8 flex justify-between items-center ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-          <div className="flex items-center gap-6">
-            <div className="w-20 h-20 rounded-full bg-violet-600 text-white flex items-center justify-center text-2xl font-bold">
-              {personal.firstName?.charAt(0)}{personal.lastName?.charAt(0)}
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold">{personal.firstName} {personal.lastName}</h2>
-              <p className="text-gray-500">{academic.department} • Batch {academic.batch}</p>
-              <p className="text-gray-500">{personal.email}</p>
-              <p className="text-gray-500">{personal.phone}</p>
-            </div>
-          </div>
-          <button onClick={handleSaveChanges} className="px-4 py-2 text-sm font-medium bg-violet-600 text-white rounded-lg hover:bg-violet-700 transition">
-            Save
-          </button>
-        </div>
+        <h2 className="flex items-center gap-2 font-semibold mb-4">
+          <FaUser className="text-blue-500"/>
+          Personal Information
+        </h2>
 
-        {/* Personal Info */}
-        <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-          <h3 className="text-lg font-semibold mb-4">Personal Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="First Name" value={personal.firstName} onChange={e => setPersonal({...personal, firstName: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="text" placeholder="Last Name" value={personal.lastName} onChange={e => setPersonal({...personal, lastName: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="email" placeholder="Email" value={personal.email} disabled className="p-2 border rounded-md w-full bg-gray-200"/>
-            <input type="text" placeholder="Phone" value={personal.phone} onChange={e => setPersonal({...personal, phone: e.target.value})} className="p-2 border rounded-md w-full"/>
-          </div>
-        </div>
+        <div className="grid grid-cols-2 gap-4">
 
-        {/* Academic Info */}
-        <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-          <h3 className="text-lg font-semibold mb-4">Academic Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Enrollment Number" value={academic.rollNumber} onChange={e => setAcademic({...academic, rollNumber: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="text" placeholder="Department" value={academic.department} onChange={e => setAcademic({...academic, department: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="number" placeholder="Batch" value={academic.batch} onChange={e => setAcademic({...academic, batch: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="number" placeholder="CGPA" value={academic.cgpa} onChange={e => setAcademic({...academic, cgpa: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="text" placeholder="Address" value={academic.address} onChange={e => setAcademic({...academic, address: e.target.value})} className="p-2 border rounded-md w-full md:col-span-2"/>
-          </div>
-        </div>
-
-        {/* Skills */}
-        <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-          <h3 className="text-lg font-semibold mb-4">Skills</h3>
-          <textarea placeholder="Skills" value={skills} onChange={e => setSkills(e.target.value)} className="p-2 border rounded-md w-full"></textarea>
-        </div>
-
-        {/* Profile Photo */}
-        <div className={`p-6 rounded-2xl shadow-md flex flex-col md:flex-row items-center gap-4 ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
           <div>
-            <h3 className="text-lg font-semibold mb-2">Profile Photo</h3>
-            {profilePreview && <img src={profilePreview} alt="Profile" className="w-32 h-32 rounded-full object-cover mb-2"/>}
-            <input type="file" onChange={e => setProfileFile(e.target.files[0])} />
+            <label className="text-sm text-gray-500">Name</label>
+            <input
+              value={user?.name || ""}
+              readOnly
+              className="border p-3 rounded w-full bg-gray-100 text-gray-600 cursor-not-allowed"
+            />
           </div>
 
-          {/* Resume */}
           <div>
-            <h3 className="text-lg font-semibold mb-2">Resume</h3>
-            {resumePreview && <p>{resumePreview}</p>}
-            <input type="file" onChange={e => setResumeFile(e.target.files[0])} />
+            <label className="text-sm text-gray-500">Email</label>
+            <input
+              value={user?.email || ""}
+              readOnly
+              className="border p-3 rounded w-full bg-gray-100 text-gray-600 cursor-not-allowed"
+            />
           </div>
-        </div>
 
-        {/* Social Links */}
-        <div className={`p-6 rounded-2xl shadow-md ${darkTheme ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
-          <h3 className="text-lg font-semibold mb-4">Social Links</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input type="text" placeholder="LinkedIn" value={socialLinks.linkedin} onChange={e => setSocialLinks({...socialLinks, linkedin: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="text" placeholder="GitHub" value={socialLinks.github} onChange={e => setSocialLinks({...socialLinks, github: e.target.value})} className="p-2 border rounded-md w-full"/>
-            <input type="text" placeholder="Portfolio" value={socialLinks.portfolio} onChange={e => setSocialLinks({...socialLinks, portfolio: e.target.value})} className="p-2 border rounded-md w-full"/>
+          <div>
+            <label className="text-sm text-gray-500">Department</label>
+            <input
+              value={user?.department || ""}
+              readOnly
+              className="border p-3 rounded w-full text-gray-500 cursor-not-allowed"
+            />
           </div>
+
+          <div>
+            <label className="text-sm text-gray-500">Graduation Year</label>
+            <input
+              value={user?.graduationYear || ""}
+              readOnly
+              className="border p-3 rounded w-full text-gray-500 cursor-not-allowed"
+            />
+          </div>
+
         </div>
 
       </div>
 
-      <ToastContainer />
+      {/* ACADEMIC INFORMATION */}
+
+      <div className="bg-white rounded-xl shadow p-6">
+
+        <h2 className="flex items-center gap-2 font-semibold mb-4">
+          <FaGraduationCap className="text-purple-500"/>
+          Academic Information
+        </h2>
+
+        <div className="grid grid-cols-2 gap-4">
+
+          <div>
+            <label className="text-sm text-gray-600">Roll Number</label>
+            <input
+              name="rollNumber"
+              value={profile.rollNumber}
+              onChange={handleChange}
+              className="border p-3 rounded w-full"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-600">CGPA</label>
+            <input
+              name="cgpa"
+              value={profile.cgpa}
+              onChange={handleChange}
+              className="border p-3 rounded w-full"
+            />
+          </div>
+
+        </div>
+
+        <div className="mt-4">
+          <label className="text-sm text-gray-600">Address</label>
+          <textarea
+            name="address"
+            value={profile.address}
+            onChange={handleChange}
+            className="border p-3 rounded w-full"
+          />
+        </div>
+
+      </div>
+
+      {/* RESUME */}
+
+      <div className="bg-white rounded-xl shadow p-6">
+
+        <h2 className="flex items-center gap-2 font-semibold mb-4">
+          <FaFileAlt className="text-orange-500"/>
+          Resume
+        </h2>
+
+        <div className="border-2 border-dashed p-8 text-center rounded-lg">
+
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx"
+            onChange={(e) => setResume(e.target.files[0])}
+          />
+
+          {resumeUrl && (
+            <div className="mt-3">
+              <a
+                href={`http://localhost:3000/${resumeUrl}`}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline"
+              >
+                View Uploaded Resume
+              </a>
+            </div>
+          )}
+
+        </div>
+
+      </div>
+
+      {/* SOCIAL LINKS */}
+
+      <div className="bg-white rounded-xl shadow p-6">
+
+        <h2 className="flex items-center gap-2 font-semibold mb-4">
+          <FaLink className="text-green-500"/>
+          Social Links
+        </h2>
+
+        <div className="grid grid-cols-1 gap-4">
+
+          <div>
+            <label className="text-sm text-gray-600">LinkedIn</label>
+            <input
+              name="linkedin"
+              value={profile.linkedin}
+              onChange={handleChange}
+              className="border p-3 rounded w-full"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-600">GitHub</label>
+            <input
+              name="github"
+              value={profile.github}
+              onChange={handleChange}
+              className="border p-3 rounded w-full"
+            />
+          </div>
+
+          <div>
+            <label className="text-sm text-gray-600">Portfolio</label>
+            <input
+              name="portfolio"
+              value={profile.portfolio}
+              onChange={handleChange}
+              className="border p-3 rounded w-full"
+            />
+          </div>
+
+        </div>
+
+      </div>
+
     </div>
+
   );
+
 }
 
 export default ProfilePage;
-

@@ -1,190 +1,305 @@
-import { useState, useEffect } from "react";
+// import { useEffect, useState } from "react";
+// import API from "../../services/api";
+// import { toast } from "react-toastify";
+// import { FaEnvelope, FaUser } from "react-icons/fa";
+
+// function Profile({ onUserLoad }) {
+
+// const [user,setUser] = useState(null);
+// const [photo,setPhoto] = useState(null);
+// const [loading,setLoading] = useState(false);
+
+// useEffect(()=>{
+
+// const fetchUser = async()=>{
+
+// try{
+
+// const {data} = await API.get("/api/student/full-profile");
+
+// setUser(data.user);
+
+// if(onUserLoad){
+// onUserLoad(data.user);
+// }
+
+// }catch{
+
+// toast.error("Failed to load profile");
+
+// }
+
+// };
+
+// fetchUser();
+
+// },[]);
+
+// const handleUpload = async()=>{
+
+// if(!photo) return;
+
+// try{
+
+// setLoading(true);
+
+// const formData = new FormData();
+// formData.append("photo",photo);
+
+// const {data} = await API.put("/api/profile",formData,{
+// headers:{ "Content-Type":"multipart/form-data" }
+// });
+
+// setUser(data.user);
+
+// localStorage.setItem("user",JSON.stringify(data.user));
+
+// toast.success("Photo updated");
+
+// }catch{
+
+// toast.error("Upload failed");
+
+// }
+
+// setLoading(false);
+
+// };
+
+// return(
+
+// <div className="bg-white rounded-xl shadow p-6">
+
+// <div className="flex items-center gap-6">
+
+// <div className="relative">
+
+// <img
+// src={
+// user?.photo
+// ? `http://localhost:3000/uploads/photos/${user.photo}`
+// : "/default.avif"
+// }
+// alt="profile"
+// className="w-24 h-24 rounded-full object-cover border"
+// />
+
+// <label className="absolute bottom-0 right-0 bg-violet-600 text-white p-2 rounded-full cursor-pointer text-xs">
+
+// ✎
+
+// <input
+// type="file"
+// hidden
+// onChange={(e)=>setPhoto(e.target.files[0])}
+// />
+
+// </label>
+
+// </div>
+
+// <div>
+
+// <h3 className="text-xl font-semibold">{user?.name}</h3>
+
+// <p className="text-gray-500 text-sm">
+// {user?.department} • Batch {user?.graduationYear}
+// </p>
+
+// <p className="flex items-center gap-2 text-gray-500 text-sm mt-1">
+// <FaEnvelope/> {user?.email}
+// </p>
+
+// {photo && (
+
+// <button
+// onClick={handleUpload}
+// disabled={loading}
+// className="mt-2 px-4 py-1 rounded-lg text-white bg-violet-600 hover:bg-violet-700"
+// >
+
+// {loading ? "Uploading..." : "Save Photo"}
+
+// </button>
+
+// )}
+
+// </div>
+
+// </div>
+
+// {/* PERSONAL INFO */}
+
+// <div className="mt-6">
+
+// <h2 className="flex items-center gap-2 font-semibold mb-4">
+
+// <FaUser className="text-blue-500"/>
+
+// Personal Information
+
+// </h2>
+
+// <div className="grid grid-cols-2 gap-4">
+
+// <input
+// value={user?.name || ""}
+// readOnly
+// className="border p-3 rounded-lg bg-gray-100"
+// />
+
+// <input
+// value={user?.email || ""}
+// readOnly
+// className="border p-3 rounded-lg bg-gray-100"
+// />
+
+// <input
+// value={user?.department || ""}
+// readOnly
+// className="border p-3 rounded-lg bg-gray-100"
+// />
+
+// <input
+// value={user?.graduationYear || ""}
+// readOnly
+// className="border p-3 rounded-lg bg-gray-100"
+// />
+
+// </div>
+
+// </div>
+
+// </div>
+
+// );
+
+// }
+
+// export default Profile;
+
+import { useEffect, useState } from "react";
 import API from "../../services/api";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
+import { FaEnvelope } from "react-icons/fa";
 
 function Profile() {
-  const [user, setUser] = useState({});
-  const [form, setForm] = useState({
-    name: "",
-    department: "",
-    graduationYear: "",
-  });
+
+  const [user, setUser] = useState(null);
   const [photo, setPhoto] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch user profile from backend
   useEffect(() => {
+
     const fetchUser = async () => {
+
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
 
-        const { data } = await API.get("/student/full-profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const { data } = await API.get("/api/student/full-profile");
+        setUser(data.user);
 
-        const merged = {
-          ...data.user,
-          ...data.studentProfile,
-        };
-        setUser(merged);
+      } catch {
 
-        setForm({
-          name: merged.name || "",
-          department: merged.department || "",
-          graduationYear: merged.graduationYear || "",
-        });
+        toast.error("Failed to load profile");
 
-        // Show existing profile photo
-        if (merged.profilePic) {
-          setPreview(merged.profilePic);
-        }
-      } catch (err) {
-        toast.error("Failed to fetch user data");
       }
+
     };
 
     fetchUser();
+
   }, []);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  const handleUpload = async () => {
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-    setPreview(URL.createObjectURL(file));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("name", form.name);
-    formData.append("department", form.department);
-    formData.append("graduationYear", form.graduationYear);
-
-    // append file if selected
-    if (photo) formData.append("resume", photo); // backend expects 'resume' field
+    if (!photo) return;
 
     try {
-      const token = localStorage.getItem("token");
-      const { data } = await API.put("/student/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
+
+      setLoading(true);
+
+      const formData = new FormData();
+      formData.append("photo", photo);
+
+      const { data } = await API.put("/api/profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
       });
 
-      toast.success("Profile updated successfully!");
-      // Update local state with latest info
-      setUser({ ...user, ...data.profile });
+      setUser(data.user);
 
-      // Update preview if new photo uploaded
-      if (data.profile.profilePic) setPreview(data.profile.profilePic);
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Update failed");
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      toast.success("Photo updated");
+
+    } catch {
+
+      toast.error("Upload failed");
+
     }
+
+    setLoading(false);
+
   };
 
   return (
-    <>
-      <style>{`
-        .auth-container {
-          min-height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: linear-gradient(135deg, #003366, #00509e);
-        }
-        .auth-card {
-          background: #ffffff;
-          width: 450px;
-          padding: 35px;
-          border-radius: 12px;
-          box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
-          transition: 0.3s ease;
-        }
-        .auth-card input,
-        .auth-card select {
-          width: 100%;
-          padding: 12px;
-          margin-bottom: 15px;
-          border: 1px solid #ccc;
-          border-radius: 6px;
-          font-size: 14px;
-        }
-        .auth-card button {
-          width: 100%;
-          padding: 12px;
-          background: #003366;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          cursor: pointer;
-        }
-        .auth-card button:hover {
-          background: #002244;
-        }
-        .auth-card h2 {
-          text-align: center;
-          margin-bottom: 25px;
-          color: #003366;
-        }
-        .photo-preview {
-          width: 100px;
-          height: 100px;
-          object-fit: cover;
-          border-radius: 50%;
-          margin-bottom: 15px;
-        }
-      `}</style>
 
-      <div className="auth-container">
-        <div className="auth-card">
-          <h2>Update Profile</h2>
+    <div className="bg-white rounded-xl shadow p-6">
 
-          {/* {preview && <img src={preview} alt="preview" className="photo-preview" />}
-           */}
+      <div className="flex items-center gap-6">
 
-           <img
-  src={preview || "https://i.gifer.com/YCZH.gif"}
-  alt="preview"
-  className="photo-preview"
-/>
+        <div className="relative">
 
-          <form onSubmit={handleSubmit}>
+          <img
+            src={
+              user?.photo
+                ? `http://localhost:3000/uploads/photos/${user.photo}`
+                : "/default.avif"
+            }
+            alt="profile"
+            className="w-24 h-24 rounded-full object-cover border"
+          />
+
+          <label className="absolute bottom-0 right-0 bg-violet-600 text-white p-2 rounded-full cursor-pointer text-xs">
+            ✎
             <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={form.name}
-              onChange={handleChange}
+              type="file"
+              hidden
+              onChange={(e) => setPhoto(e.target.files[0])}
             />
-            <input
-              type="text"
-              name="department"
-              placeholder="Department"
-              value={form.department}
-              onChange={handleChange}
-            />
-            <input
-              type="number"
-              name="graduationYear"
-              placeholder="Graduation Year"
-              value={form.graduationYear}
-              onChange={handleChange}
-            />
-            <input type="file" accept="image/*" onChange={handleFileChange} />
-            <button type="submit">Update Profile</button>
-          </form>
+          </label>
+
         </div>
+
+        <div>
+
+          <h3 className="text-xl font-semibold">{user?.name}</h3>
+
+          <p className="text-gray-500 text-sm">
+            {user?.department} • Batch {user?.graduationYear}
+          </p>
+
+          <p className="flex items-center gap-2 text-gray-500 text-sm mt-1">
+            <FaEnvelope /> {user?.email}
+          </p>
+
+          {photo && (
+            <button
+              onClick={handleUpload}
+              disabled={loading}
+              className="mt-2 px-4 py-1 rounded-lg text-white bg-violet-600 hover:bg-violet-700"
+            >
+              {loading ? "Uploading..." : "Save Photo"}
+            </button>
+          )}
+
+        </div>
+
       </div>
 
-      <ToastContainer position="top-right" autoClose={3000} />
-    </>
+    </div>
+
   );
+
 }
 
 export default Profile;
