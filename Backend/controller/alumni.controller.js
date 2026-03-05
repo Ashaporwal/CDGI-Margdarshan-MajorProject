@@ -40,7 +40,13 @@ export const getMyAlumniProfile = async (req, res) => {
       return res.status(404).json({ message: "Profile not found" });
     }
 
-    res.status(200).json(profile);
+       let profileObj = profile.toObject(); // mongoose document -> JS object
+    if (profileObj.photo) {
+      profileObj.photo = `http://localhost:5000/uploads/${profileObj.photo}`;
+    }
+
+    // res.status(200).json(profile);
+    res.status(200).json(profileObj);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Server error" });
