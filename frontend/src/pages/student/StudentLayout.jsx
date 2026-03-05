@@ -84,11 +84,10 @@ function StudentLayout() {
               className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition
               text-gray-700 dark:text-gray-200
               hover:bg-violet-50 dark:hover:bg-gray-700
-              ${
-                location.pathname === item.path
+              ${location.pathname === item.path
                   ? "bg-violet-100 text-violet-700 font-semibold"
                   : ""
-              }`}
+                }`}
             >
               {item.icon}
               <span>{item.name}</span>
@@ -117,6 +116,7 @@ function StudentLayout() {
             My Profile
           </h2>
 
+
           <div className="flex items-center gap-5 text-gray-700 dark:text-gray-200">
 
             {/* Dark Toggle */}
@@ -140,7 +140,7 @@ function StudentLayout() {
               <img
                 src={
                   user?.photo
-                    ? `http://localhost:3000/uploads/${user.photo}`
+                    ? `http://localhost:3000/uploads/photos/${user.photo}`
                     : "/default.avif"
                 }
                 alt="profile"
@@ -241,7 +241,7 @@ export default StudentLayout;
 //                 {/* Logout fixed under menu */}
 //                 <button
 //                     onClick={handleLogout}
-//                     className="flex items-center justify-center gap-2 py-3 
+//                     className="flex items-center justify-center gap-2 py-3
 //           bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition duration-300">
 //                     <FaSignOutAlt />
 //                     Logout
