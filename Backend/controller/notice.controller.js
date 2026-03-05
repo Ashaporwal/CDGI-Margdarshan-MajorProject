@@ -31,8 +31,11 @@ export const createNotice = async (req, res) => {
 export const getAllNotices = async (req, res) => {
   try {
 
-    const notices = await Notice.find({ status: "active" })
-      .sort({ createdAt: -1 });
+    // const notices = await Notice.find({ status: "active" })
+    //   .sort({ createdAt: -1 });
+const notices = await Notice.find({ status: "active" })
+.populate("createdBy","name photo")
+.sort({ createdAt: -1 });
 
     res.status(200).json({ notices });
 
