@@ -30,6 +30,7 @@ body("skills").optional().isArray(),
   createJob
 );
 
+
 // router.get("/my", protect, async (req, res) => {
 //   const jobs = await Job.find({ postedBy: req.user.id });
 //   res.json(jobs);
