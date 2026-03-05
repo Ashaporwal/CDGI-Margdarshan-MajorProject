@@ -31,11 +31,18 @@ lastName: {
         enum: ["student", "alumni", "admin"],
         default: "student"
     },
-    department: {
-        type: String,
-        required: true
+department: {
+    type: String,
+    required: function () {
+        return this.role !== "admin";
+    }
+},
+
+    // department: {
+    //     type: String,
+    //     required: true
         
-    },
+    // },
     graduationYear: {
         type: Number,
         required: function () {
@@ -54,3 +61,12 @@ lastName: {
 const User = mongoose.model("User", userSchema);
 
 export default User;
+
+
+// {
+//   "name": "avika vyas",
+//   "email": "avika@cdgi.com",
+//   "password": "12345", 
+//   "role": "admin",
+//   "isVerified": true
+// }
