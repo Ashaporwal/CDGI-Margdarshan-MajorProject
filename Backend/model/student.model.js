@@ -14,25 +14,39 @@ const studentProfileSchema = new mongoose.Schema({
         trim: true
     },
     course: {
-        type: String, 
+        type: String,
         required: true,
         trim: true
     },
     yearOfStudy: {
         type: Number,
         required: true,
-        min: 1, 
+        min: 1,
         max: 6
+    },
+    cgpa: {
+        type: Number,
+        min: 0,
+        max: 10
+    },
+
+    address: {
+        type: String,
+        trim: true
     },
 
     skills: {
-        type: [String],     
+        type: [String],
         default: []
     },
+    linkedin: String,
+    github: String,
+    portfolio: String,
     resumeUrl: {
         type: String,
         trim: true
     },
+
     placementStatus: {
         type: String,
         enum: ["Not Placed", "Placed"],

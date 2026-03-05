@@ -1,10 +1,13 @@
 import express from "express";
 import { body } from "express-validator";
+import { upload } from "../middleware/multer.js";
 import {
   createProfile,
   getProfile,
   updateProfile,
-  deleteProfile
+  deleteProfile,
+  getFullProfile,
+  uploadResume,
 } from "../controller/student.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -30,6 +33,11 @@ router.get(
   getProfile
 );
 
+router.get(
+  "/full-profile",
+  protect,
+  getFullProfile
+);
 
 router.put(
   "/profile",
@@ -37,6 +45,12 @@ router.put(
   updateProfile
 );
 
+router.put(
+  "/upload-resume",
+  protect,
+  upload.single("resume"),
+  uploadResume
+);
 
 router.delete(
   "/profile",

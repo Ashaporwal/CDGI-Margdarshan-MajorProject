@@ -1,4 +1,4 @@
-function Notices() {
+function Notice() {
   return (
     <div>
       <h1 className="text-2xl font-bold mb-4">College Notices</h1>
@@ -7,4 +7,4 @@ function Notices() {
   );
 }
 
-export default Notices;
+export default Notice;
