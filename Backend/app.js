@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 import bodyParser from "body-parser";
-
+import path from "path";
 import userRouter from "./router/user.routes.js";
 import jobRouter from "./router/job.routes.js";
 import adminRouter from "./router/admin.routes.js";
@@ -28,7 +28,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use("/uploads", express.static("uploads"));
+// app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static(path.join(process.cwd(),"uploads")));
 
 
 app.use("/api", userRouter);
