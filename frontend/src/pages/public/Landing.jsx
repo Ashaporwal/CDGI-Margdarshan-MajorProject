@@ -15,9 +15,12 @@ export default function Landing() {
 
                 <div className="relative max-w-5xl mx-auto text-center px-6">
 
+
                     <h1 className="text-6xl font-bold text-gray-800 mb-6 leading-tight">
                         Connect. Learn. <span className="text-violet-600">Succeed.</span>
                     </h1>
+
+
 
                     <p className="text-gray-500 text-lg mb-8 max-w-2xl mx-auto">
                         A modern placement and alumni engagement platform built to empower
