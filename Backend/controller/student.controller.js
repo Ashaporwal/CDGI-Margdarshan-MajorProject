@@ -256,22 +256,6 @@ export const updateStudentStatus = async (req, res) => {
 
 
 
-/* DELETE STUDENT */
-
-export const deleteStudent = async (req, res) => {
-
-  try {
-
-    await StudentProfile.findByIdAndDelete(req.params.id);
-
-    res.json({ message: "Student deleted" });
-
-  } catch (error) {
-    res.status(500).json({ message: "Delete failed" });
-  }
-
-};
-
 
 
 // export const getFullProfile = async (req, res) => {
