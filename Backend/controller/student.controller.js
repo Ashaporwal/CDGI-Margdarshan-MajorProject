@@ -204,6 +204,74 @@ export const getFullProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+/* GET ALL STUDENTS (ADMIN) */
+
+export const getAllStudents = async (req, res) => {
+  try {
+
+    const page = Number(req.query.page) || 1;
+    const limit = 10;
+    const skip = (page - 1) * limit;
+
+    const students = await StudentProfile.find()
+      .populate("userId", "name email department graduationYear")
+      .skip(skip)
+      .limit(limit);
+
+    const total = await StudentProfile.countDocuments();
+
+    res.json({
+      profiles: students,
+      pages: Math.ceil(total / limit)
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+/* UPDATE STATUS */
+
+export const updateStudentStatus = async (req, res) => {
+
+  try {
+
+    const { status } = req.body;
+
+    const student = await StudentProfile.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new: true }
+    );
+
+    res.json(student);
+
+  } catch (error) {
+    res.status(500).json({ message: "Status update failed" });
+  }
+
+};
+
+
+
+/* DELETE STUDENT */
+
+export const deleteStudent = async (req, res) => {
+
+  try {
+
+    await StudentProfile.findByIdAndDelete(req.params.id);
+
+    res.json({ message: "Student deleted" });
+
+  } catch (error) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+
+};
+
 
 
 // export const getFullProfile = async (req, res) => {
