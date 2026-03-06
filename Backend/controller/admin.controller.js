@@ -46,3 +46,25 @@ export const getPendingAlumni = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+
+export const deleteAlumni = async (req, res) => {
+  try {
+
+    if (req.user.role !== "admin") {
+      return res.status(403).json({ message: "Only admin allowed" });
+    }
+
+    const alumni = await AlumniProfile.findByIdAndDelete(req.params.id);
+
+    if (!alumni) {
+      return res.status(404).json({ message: "Alumni not found" });
+    }
+
+    res.status(200).json({ message: "Alumni deleted" });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
