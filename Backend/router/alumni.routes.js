@@ -4,7 +4,8 @@ import {
   createAlumniProfile,
   getMyAlumniProfile,
   updateAlumniProfile,
-  getAllAlumniProfiles
+  getAllAlumniProfiles,
+  updatedAlumniStatus,getAlumniById
 } from "../controller/alumni.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -42,11 +43,14 @@ router.post(
 // );
 
 
+
 router.get(
   "/me",
   protect,
   getMyAlumniProfile
 );
+
+
 
 // router.put(
 //   "/alumni",
@@ -60,6 +64,11 @@ router.put(
   updateAlumniProfile
 );
 
+router.patch(
+  "/status/:id",
+  protect,
+  updatedAlumniStatus
+);
 // router.get(
 //   "/alumni/all",
 //   protect,
@@ -69,6 +78,12 @@ router.get(
   "/all",
   protect,
   getAllAlumniProfiles
+);
+
+router.get(
+  "/:id",
+  protect,
+  getAlumniById
 );
 
 export default router;
