@@ -35,6 +35,12 @@ const alumniSchema = new mongoose.Schema(
   github: String,
   portfolio: String,
 
+  status:{
+    type:String,
+    enum: ["Pending","Verified","Rejected"],
+    default:"Pending"
+  },
+
   mentorshipAvailable: {
     type: Boolean,
     default: false
