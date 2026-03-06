@@ -14,8 +14,15 @@ const studentProfileSchema = new mongoose.Schema({
     github: String,
     portfolio: String,
     resume: String,
-    profilePic: String
-});
+    profilePic: String,
+
+    status:{
+        type:String,
+        enum:["Pending","Verified","Rejected"],
+        default:"Pending"
+    }
+
+},{timestamps:true});
 
 export default mongoose.model("StudentProfile", studentProfileSchema);
 
