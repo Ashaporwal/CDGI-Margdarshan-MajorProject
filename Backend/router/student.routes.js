@@ -5,7 +5,9 @@ import {
   getProfile,
   updateProfile,
   deleteProfile,
-  getFullProfile
+  getFullProfile,
+  getAllStudents,
+  updateStudentStatus
 } from "../controller/student.controller.js";
 
 import { protect } from "../middleware/auth.middleware.js";
@@ -25,6 +27,11 @@ router.post(
   validate,
   createProfile
 );
+
+router.get("/all",protect,getAllStudents);
+
+router.patch("/status/:id",protect,updateStudentStatus);
+
 
 router.get(
   "/profile",
