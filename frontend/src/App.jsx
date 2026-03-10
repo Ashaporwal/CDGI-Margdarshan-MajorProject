@@ -1,22 +1,36 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
 import NotFound from "./pages/NotFound";
 import Register from "./pages/Register";
 import Landing from "./pages/public/Landing";
 import Login from "./pages/Login";
-import Dashboard from "./pages/student/Dashboard";
+
 import ProtectedRoute from "./components/ProtectedRoute";
+
+import StudentLayout from "./pages/student/StudentLayout";
+import Dashboard from "./pages/student/Dashboard";
 import ProfilePage from "./pages/student/ProfilePage";
+// import Notices from "./pages/student/Notice";
+import Stories from "./pages/student/Stories";
+import Jobs from "./pages/student/JobPage";
+import StudentNotices from "./pages/student/StudentNotices";
+
 import AlumniLayout from "./pages/alumni/AlumniLayout";
 import AlumniDashboard from "./pages/alumni/AlumniDashboard";
 import AlumniProfile from "./pages/alumni/AlumniProfile";
 import PostJob from "./pages/alumni/jobs/PostJob";
 import MyJobs from "./pages/alumni/jobs/MyJobs";
 import EditJob from "./pages/alumni/jobs/EditJob";
-import StudentLayout from "./pages/student/StudentLayout";
-import Notices from "./pages/student/Notice";
-import 
 
-function App(){
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ManageStudents from "./pages/admin/ManageStudents";
+import ManageAlumni from "./pages/admin/ManageAlumni";
+import AdminNotices from "./pages/admin/notices/AdminNotices";
+
+
+function App() {
   return (
     <BrowserRouter>
       <Routes>
@@ -26,8 +40,7 @@ function App(){
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Student Routes */}
-
+        {/*------- Student Routes--------- */}
         <Route path="/student"
           element={
             <ProtectedRoute role="student">
@@ -35,19 +48,20 @@ function App(){
             </ProtectedRoute>
           }
         >
+          <Route index element={<Navigate to="dashboard" />} />
 
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="profile" element={<ProfilePage />} />
-          {/* <Route path="jobs" element={<Jobs />} /> */}
+          <Route path="jobs" element={<Jobs />} />
           {/* <Route path="applications" element={<Applications />} /> */}
           {/* <Route path="events" element={<Events />} /> */}
-          <Route path="notice" element={<Notices/>}/>
-          <Route path="stories" element={<Stories/>}/>
+          <Route path="notice" element={<StudentNotices />} />
+          <Route path="stories" element={<Stories />} />
 
         </Route>
 
 
-        {/* Alumni Layout Route (Parent) */}
+        {/*----------- Alumni Layout Route (Parent)-------- */}
         <Route
           path="/alumni"
           element={
@@ -64,9 +78,28 @@ function App(){
           <Route path="profile" element={<AlumniProfile />} />
         </Route>
 
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute role="admin">
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" />} />
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="students" element={<ManageStudents />} />
+          <Route path="alumni" element={<ManageAlumni />} />
+          <Route path="notices" element={<AdminNotices />} />
+
+
+        </Route>
+
         <Route path="*" element={<NotFound />} />
 
       </Routes>
+
+
     </BrowserRouter>
   );
 }
