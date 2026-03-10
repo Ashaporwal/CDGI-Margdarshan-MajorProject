@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../../services/api";
+
 import { useNavigate } from "react-router-dom";
 
 function StudentNotices() {
@@ -17,8 +18,8 @@ function StudentNotices() {
   const fetchNotices = async () => {
     try {
 
-      const res = await axios.get(
-        "http://localhost:5000/notice/notice",
+      const res = await API.get(
+        "/api/notice",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -54,7 +55,7 @@ function StudentNotices() {
               <img
                 src={
                   notice.createdBy?.photo
-                    ? notice.createdBy.photo
+                    ? `http://localhost:3000/uploads/photos/${notice.createdBy.photo}`
                     : "/default-user.png"
                 }
                 alt="admin"

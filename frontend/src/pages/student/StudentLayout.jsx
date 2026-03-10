@@ -73,9 +73,21 @@ function StudentLayout() {
 
         <div className="flex-1">
 
-          <h2 className="text-xl font-bold text-violet-600 dark:text-violet-400 mb-6">
-            Campus Connect
-          </h2>
+          <div className="flex items-center gap-2 mb-8">
+
+            <span className="text-2xl">🎓</span>
+
+            <span className="font-bold text-gray-900 text-lg">
+              CDGI
+            </span>
+
+            <span className="font-semibold bg-gradient-to-r 
+  from-violet-600 via-purple-500 to-indigo-500 
+  bg-clip-text text-transparent text-lg">
+              Margdarshan
+            </span>
+
+          </div>
 
           {menuItems.map((item) => (
             <div
