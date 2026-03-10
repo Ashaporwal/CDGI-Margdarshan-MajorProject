@@ -1,7 +1,340 @@
+// import { useEffect, useState } from "react";
+// import API from "../../services/api";
+// import { toast } from "react-toastify";
+// import { FaEye, FaCheck } from "react-icons/fa";
+
+// function ManageAlumni() {
+
+//   const [alumni, setAlumni] = useState([]);
+//   const [filtered, setFiltered] = useState([]);
+
+//   const [search, setSearch] = useState("");
+//   const [batch, setBatch] = useState("");
+
+//   const [selected, setSelected] = useState(null);
+
+//   /* ================= FETCH DATA ================= */
+
+//   const fetchAlumni = async () => {
+//     try {
+
+//       const res = await API.get("/api/admin/pending-alumni");
+
+//       setAlumni(res.data);
+//       setFiltered(res.data);
+
+//     } catch (error) {
+//       toast.error("Failed to fetch alumni");
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchAlumni();
+//   }, []);
+
+//   /* ================= FILTER ================= */
+
+//   useEffect(() => {
+
+//     let data = alumni;
+
+//     if (search) {
+//       data = data.filter((a) =>
+//         a.name?.toLowerCase().includes(search.toLowerCase()) ||
+//         a.company?.toLowerCase().includes(search.toLowerCase())
+//       );
+//     }
+
+//     if (batch) {
+//       data = data.filter(
+//         (a) => String(a.batch) === batch
+//       );
+//     }
+
+//     setFiltered(data);
+
+//   }, [search, batch, alumni]);
+
+//   /* ================= VERIFY ================= */
+
+//   const verifyAlumni = async (userId) => {
+
+//     try {
+
+//       await API.put(`/api/admin/verify-alumni/${userId}`);
+
+//       toast.success("Alumni verified ");
+
+//       fetchAlumni();
+
+//     } catch {
+//       toast.error("Verification failed");
+//     }
+//   };
+
+//   /* ================= STATS ================= */
+
+//   const total = alumni.length;
+
+//   const verified = alumni.filter(
+//     (a) => a.status === "Verified"
+//   ).length;
+
+//   const pending = alumni.filter(
+//     (a) => a.status === "Pending"
+//   ).length;
+
+//   /* ================= UI ================= */
+
+//   return (
+
+//     <div className="p-6">
+
+//       {/* TITLE */}
+
+//       <h2 className="text-2xl font-semibold mb-2">
+//         Alumni Management
+//       </h2>
+
+//       <p className="text-gray-500 mb-6">
+//         Verify and manage alumni accounts
+//       </p>
+
+//       {/* ================= STATS ================= */}
+
+//       <div className="grid grid-cols-4 gap-6 mb-6">
+
+//         <div className="bg-white p-5 rounded-xl shadow">
+//           <p className="text-gray-500 text-sm">Total Alumni</p>
+//           <h3 className="text-2xl font-bold">{total}</h3>
+//         </div>
+
+//         <div className="bg-white p-5 rounded-xl shadow">
+//           <p className="text-gray-500 text-sm">Verified</p>
+//           <h3 className="text-2xl font-bold text-green-600">
+//             {verified}
+//           </h3>
+//         </div>
+
+//         <div className="bg-white p-5 rounded-xl shadow">
+//           <p className="text-gray-500 text-sm">Pending</p>
+//           <h3 className="text-2xl font-bold text-yellow-600">
+//             {pending}
+//           </h3>
+//         </div>
+
+//         <div className="bg-white p-5 rounded-xl shadow">
+//           <p className="text-gray-500 text-sm">Jobs Posted</p>
+//           <h3 className="text-2xl font-bold">--</h3>
+//         </div>
+
+//       </div>
+
+//       {/* ================= SEARCH ================= */}
+
+//       <div className="flex gap-4 mb-6">
+
+//         <input
+//           type="text"
+//           placeholder="Search by name or company"
+//           className="border p-2 rounded w-72"
+//           onChange={(e) => setSearch(e.target.value)}
+//         />
+
+//         <select
+//           className="border p-2 rounded"
+//           onChange={(e) => setBatch(e.target.value)}
+//         >
+//           <option value="">All Batches</option>
+//           <option value="2018">2018</option>
+//           <option value="2019">2019</option>
+//           <option value="2020">2020</option>
+//           <option value="2021">2021</option>
+//           <option value="2022">2022</option>
+//           <option value="2023">2023</option>
+//         </select>
+
+//       </div>
+
+//       {/* ================= TABLE ================= */}
+
+//       <div className="bg-white rounded-xl shadow overflow-x-auto">
+
+//         <table className="min-w-full">
+
+//           <thead className="bg-gray-100">
+
+//             <tr>
+
+//               <th className="p-4 text-left">Name</th>
+
+//               <th>Company</th>
+
+//               <th>Designation</th>
+
+//               <th>Department</th>
+
+//               <th>Batch</th>
+
+//               <th>Status</th>
+
+//               <th className="text-center">Actions</th>
+
+//             </tr>
+
+//           </thead>
+
+//           <tbody>
+
+//             {filtered.map((a) => (
+
+//               <tr
+//                 key={a.id}
+//                 className="border-t hover:bg-gray-50"
+//               >
+
+//                 {/* NAME */}
+
+//                 <td className="p-4">
+
+//                   <p className="font-medium">
+//                     {a.name}
+//                   </p>
+
+//                   <p className="text-gray-500 text-sm">
+//                     {a.email}
+//                   </p>
+
+//                 </td>
+
+//                 {/* COMPANY */}
+
+//                 <td>{a.company}</td>
+
+//                 {/* DESIGNATION */}
+
+//                 <td>{a.designation}</td>
+
+//                 {/* DEPARTMENT */}
+
+//                 <td>{a.department}</td>
+
+//                 {/* BATCH */}
+
+//                 <td>{a.batch}</td>
+
+//                 {/* STATUS */}
+
+//                 <td>
+
+//                   <span
+//                     className={`px-3 py-1 rounded-full text-xs text-white
+//                     ${
+//                       a.status === "Verified"
+//                         ? "bg-green-500"
+//                         : "bg-yellow-500"
+//                     }`}
+//                   >
+//                     {a.status}
+//                   </span>
+
+//                 </td>
+
+//                 {/* ACTIONS */}
+
+//                 <td className="flex justify-center gap-4 p-4">
+
+//                   {/* VIEW */}
+
+//                   <button
+//                     onClick={() => setSelected(a)}
+//                     className="text-gray-600 hover:text-black"
+//                   >
+//                     <FaEye />
+//                   </button>
+
+//                   {/* VERIFY */}
+
+//                   {a.status === "Pending" && (
+
+//                     <button
+//                       onClick={() => verifyAlumni(a.userId)}
+//                       className="text-green-600 hover:text-green-800"
+//                     >
+//                       <FaCheck />
+//                     </button>
+
+//                   )}
+
+//                 </td>
+
+//               </tr>
+
+//             ))}
+
+//           </tbody>
+
+//         </table>
+
+//       </div>
+
+//       {/* ================= MODAL ================= */}
+
+//       {selected && (
+
+//         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+
+//           <div className="bg-white w-[420px] rounded-xl shadow-lg p-6">
+
+//             <h2 className="text-xl font-bold mb-2">
+//               {selected.name}
+//             </h2>
+
+//             <p className="text-gray-500 text-sm mb-4">
+//               {selected.email}
+//             </p>
+
+//             <div className="space-y-2 text-sm">
+
+//               <p><b>Company:</b> {selected.company}</p>
+
+//               <p><b>Position:</b> {selected.designation}</p>
+
+//               <p><b>Department:</b> {selected.department}</p>
+
+//               <p><b>Batch:</b> {selected.batch}</p>
+
+//               <p><b>Experience:</b> {selected.experienceYears} years</p>
+
+//             </div>
+
+//             <div className="flex justify-end gap-3 mt-6">
+
+//               <button
+//                 onClick={() => setSelected(null)}
+//                 className="px-4 py-2 border rounded"
+//               >
+//                 Close
+//               </button>
+
+//             </div>
+
+//           </div>
+
+//         </div>
+
+//       )}
+
+//     </div>
+//   );
+// }
+
+// export default ManageAlumni;
+
 import { useEffect, useState } from "react";
 import API from "../../services/api";
 import { toast } from "react-toastify";
-import { FaCheck, FaTimes, FaTrash } from "react-icons/fa";
+import { FaEye, FaCheck } from "react-icons/fa";
 
 function ManageAlumni() {
 
@@ -10,29 +343,38 @@ function ManageAlumni() {
 
   const [search, setSearch] = useState("");
   const [batch, setBatch] = useState("");
+  const [department, setDepartment] = useState("");
+
+  const [selected, setSelected] = useState(null);
 
   const [page, setPage] = useState(1);
-  const [pages, setPages] = useState(1);
+
+  const limit = 5;
+
+  /* ================= FETCH DATA ================= */
+
+  const fetchAlumni = async () => {
+
+    try {
+
+      const res = await API.get("/api/admin/pending-alumni");
+
+      setAlumni(res.data);
+      setFiltered(res.data);
+
+    } catch {
+
+      toast.error("Failed to fetch alumni");
+
+    }
+
+  };
 
   useEffect(() => {
     fetchAlumni();
-  }, [page]);
+  }, []);
 
-  const fetchAlumni = async () => {
-    try {
-
-      const res = await API.get(`/alumni/all?page=${page}`);
-
-      setAlumni(res.data.profiles);
-      setFiltered(res.data.profiles);
-      setPages(res.data.pages);
-
-    } catch (error) {
-      toast.error("Failed to fetch alumni");
-    }
-  };
-
-  /* SEARCH FILTER */
+  /* ================= FILTER ================= */
 
   useEffect(() => {
 
@@ -40,115 +382,153 @@ function ManageAlumni() {
 
     if (search) {
       data = data.filter((a) =>
-        a.userId?.name?.toLowerCase().includes(search.toLowerCase()) ||
+        a.name?.toLowerCase().includes(search.toLowerCase()) ||
         a.company?.toLowerCase().includes(search.toLowerCase())
       );
     }
 
     if (batch) {
       data = data.filter(
-        (a) => String(a.userId?.graduationYear) === batch
+        (a) => String(a.batch) === batch
+      );
+    }
+
+    if (department) {
+      data = data.filter(
+        (a) => a.department === department
       );
     }
 
     setFiltered(data);
+    setPage(1);
 
-  }, [search, batch, alumni]);
+  }, [search, batch, department, alumni]);
 
-  /* STATUS UPDATE */
+  /* ================= PAGINATION ================= */
 
-  const updateStatus = async (id, status) => {
-    try {
+  const start = (page - 1) * limit;
+  const end = start + limit;
 
-      await API.patch(`/alumni/status/${id}`, { status });
+  const paginatedData = filtered.slice(start, end);
 
-      toast.success(`Alumni ${status}`);
-      fetchAlumni();
+  const pages = Math.ceil(filtered.length / limit);
 
-    } catch {
-      toast.error("Status update failed");
-    }
-  };
+  /* ================= VERIFY ================= */
 
-  /* DELETE */
-
-  const deleteAlumni = async (id) => {
-
-    if (!window.confirm("Delete this alumni?")) return;
+  const verifyAlumni = async (userId) => {
 
     try {
 
-      await API.delete(`/alumni/${id}`);
+      await API.put(`/api/admin/verify-alumni/${userId}`);
 
-      toast.success("Alumni deleted");
+      toast.success("Alumni verified successfully");
+
       fetchAlumni();
 
     } catch {
-      toast.error("Delete failed");
+
+      toast.error("Verification failed");
+
     }
+
   };
+
+  /* ================= STATS ================= */
+
+  const total = alumni.length;
+
+  const verified = alumni.filter(
+    (a) => a.status === "Verified"
+  ).length;
+
+  const pending = alumni.filter(
+    (a) => a.status === "Pending"
+  ).length;
 
   return (
 
     <div className="p-6">
 
-      {/* <h2 className="text-2xl font-bold mb-6"> */}
-        <h2 className="text-2xl font-li mb-6">
+      <h2 className="text-2xl font-semibold mb-2">
         Alumni Management
-        {/* <h6>Verify and manage alumni accounts</h6> */}
       </h2>
 
-      {/* FILTERS */}
+      <p className="text-gray-500 mb-6">
+        Verify and manage alumni accounts
+      </p>
+
+      {/* ================= STATS ================= */}
+
+      <div className="grid grid-cols-4 gap-6 mb-6">
+
+        <div className="bg-white p-5 rounded-xl shadow">
+          <p className="text-gray-500 text-sm">Total Alumni</p>
+          <h3 className="text-2xl font-bold">{total}</h3>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl shadow">
+          <p className="text-gray-500 text-sm">Verified</p>
+          <h3 className="text-2xl font-bold text-green-600">{verified}</h3>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl shadow">
+          <p className="text-gray-500 text-sm">Pending</p>
+          <h3 className="text-2xl font-bold text-yellow-600">{pending}</h3>
+        </div>
+
+        <div className="bg-white p-5 rounded-xl shadow">
+          <p className="text-gray-500 text-sm">Jobs Posted</p>
+          <h3 className="text-2xl font-bold">--</h3>
+        </div>
+
+      </div>
+
+      {/* ================= FILTERS ================= */}
 
       <div className="flex gap-4 mb-6">
 
         <input
           type="text"
           placeholder="Search name or company"
-          className="border p-2 rounded w-72 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border p-2 rounded w-72"
           onChange={(e) => setSearch(e.target.value)}
         />
 
         <select
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border p-2 rounded"
           onChange={(e) => setBatch(e.target.value)}
         >
-          <option value="">Batch</option>
-          <option value="2011">2011</option>
-          <option value="2012">2012</option>
-          <option value="2013">2013</option>
-          <option value="2014">2014</option>
-          <option value="2015">2015</option>
-          <option value="2016">2016</option>
-          <option value="2017">2017</option>
-          <option value="2018">2018</option>
-          <option value="2019">2019</option>
-          <option value="2020">2020</option>
-          <option value="2021">2021</option>
-          <option value="202">2022</option>
-          <option value="202">2023</option>
-          <option value="202">2024</option>
-          <option value="202">2025</option>
-          <option value="202">2026</option>
-          
+          <option value="">All Batches</option>
+          <option value="2025">2025</option>
+          <option value="2024">2024</option>
+          <option value="2023">2023</option>
+        </select>
+
+        <select
+          className="border p-2 rounded"
+          onChange={(e) => setDepartment(e.target.value)}
+        >
+          <option value="">All Departments</option>
+          <option value="CSE">CSE</option>
+          <option value="Information Technology (IT)">IT</option>
+          <option value="Mechanical">Mechanical</option>
         </select>
 
       </div>
 
-      {/* TABLE */}
+      {/* ================= TABLE ================= */}
 
-      <div className="overflow-x-auto bg-white rounded-xl shadow">
+      <div className="bg-white rounded-xl shadow overflow-x-auto">
 
         <table className="min-w-full">
 
-          <thead className="bg-gray-100 text-gray-700">
+          <thead className="bg-gray-100">
 
             <tr>
               <th className="p-4 text-left">Name</th>
-              <th>Email</th>
               <th>Company</th>
               <th>Designation</th>
-              <th>Experience</th>
+              <th>Department</th>
               <th>Batch</th>
               <th>Status</th>
               <th className="text-center">Actions</th>
@@ -158,37 +538,27 @@ function ManageAlumni() {
 
           <tbody>
 
-            {filtered.map((a) => (
+            {paginatedData.map((a) => (
 
-              <tr
-                key={a._id}
-                className="border-t hover:bg-gray-50"
-              >
+              <tr key={a.id} className="border-t hover:bg-gray-50">
 
-                <td className="p-4 font-medium">
-                  {a.userId?.name}
+                <td className="p-4">
+                  <p className="font-medium">{a.name}</p>
+                  <p className="text-gray-500 text-sm">{a.email}</p>
                 </td>
 
-                <td>{a.userId?.email}</td>
-
                 <td>{a.company}</td>
-
                 <td>{a.designation}</td>
-
-                <td>{a.experienceYears} yrs</td>
-
-                <td>{a.userId?.graduationYear}</td>
-
-                {/* STATUS BADGE */}
+                <td>{a.department}</td>
+                <td>{a.batch}</td>
 
                 <td>
 
                   <span
-                    className={`px-3 py-1 rounded-full text-white text-xs ${
+                    className={`px-3 py-1 rounded-full text-xs text-white
+                    ${
                       a.status === "Verified"
                         ? "bg-green-500"
-                        : a.status === "Rejected"
-                        ? "bg-red-500"
                         : "bg-yellow-500"
                     }`}
                   >
@@ -197,44 +567,25 @@ function ManageAlumni() {
 
                 </td>
 
-                {/* ACTION ICONS */}
+                <td className="flex justify-center gap-4 p-4">
 
-                <td>
+                  <button
+                    onClick={() => setSelected(a)}
+                    className="text-gray-600 hover:text-black"
+                  >
+                    <FaEye />
+                  </button>
 
-                  <div className="flex justify-center gap-3">
-
-                    {a.status === "Pending" && (
-
-                      <>
-                        <button
-                          onClick={() =>
-                            updateStatus(a._id, "Verified")
-                          }
-                          className="text-green-600 hover:text-green-800"
-                        >
-                          <FaCheck size={18} />
-                        </button>
-
-                        <button
-                          onClick={() =>
-                            updateStatus(a._id, "Rejected")
-                          }
-                          className="text-yellow-600 hover:text-yellow-800"
-                        >
-                          <FaTimes size={18} />
-                        </button>
-                      </>
-
-                    )}
+                  {a.status === "Pending" && (
 
                     <button
-                      onClick={() => deleteAlumni(a._id)}
-                      className="text-red-600 hover:text-red-800"
+                      onClick={() => verifyAlumni(a.userId)}
+                      className="text-green-600 hover:text-green-800"
                     >
-                      <FaTrash size={16} />
+                      <FaCheck />
                     </button>
 
-                  </div>
+                  )}
 
                 </td>
 
@@ -248,14 +599,14 @@ function ManageAlumni() {
 
       </div>
 
-      {/* PAGINATION */}
+      {/* ================= PAGINATION ================= */}
 
       <div className="flex justify-center gap-4 mt-6">
 
         <button
           disabled={page === 1}
           onClick={() => setPage(page - 1)}
-          className="bg-gray-200 px-3 py-1 rounded"
+          className="bg-gray-200 px-4 py-2 rounded"
         >
           Prev
         </button>
@@ -267,68 +618,55 @@ function ManageAlumni() {
         <button
           disabled={page === pages}
           onClick={() => setPage(page + 1)}
-          className="bg-gray-200 px-3 py-1 rounded"
+          className="bg-gray-200 px-4 py-2 rounded"
         >
           Next
         </button>
 
       </div>
 
+      {/* ================= MODAL ================= */}
+
+      {selected && (
+
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40">
+
+          <div className="bg-white w-[420px] rounded-xl shadow-lg p-6">
+
+            <h2 className="text-xl font-bold mb-2">{selected.name}</h2>
+
+            <p className="text-gray-500 text-sm mb-4">{selected.email}</p>
+
+            <div className="space-y-2 text-sm">
+
+              <p><b>Company:</b> {selected.company}</p>
+              <p><b>Position:</b> {selected.designation}</p>
+              <p><b>Department:</b> {selected.department}</p>
+              <p><b>Batch:</b> {selected.batch}</p>
+              <p><b>Experience:</b> {selected.experienceYears} years</p>
+
+            </div>
+
+            <div className="flex justify-end mt-6">
+
+              <button
+                onClick={() => setSelected(null)}
+                className="px-4 py-2 border rounded"
+              >
+                Close
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
+
     </div>
   );
+
 }
 
 export default ManageAlumni;
-
-
-// import { useEffect, useState } from "react";
-// import API from "../../services/api";
-
-// function ManageAlumni() {
-
-//   const [alumni, setAlumni] = useState([]);
-
-// //   const fetchAlumni = async () => {
-// //     try {
-// //       const res = await API.get("/alumni/all");
-// //       setAlumni(res.data);
-// //     } catch (error) {
-// //       console.log("Error fetching alumni:", error);
-// //     }
-// //   };
-// const fetchAlumni = async () => {
-//   try {
-//     const res = await API.get("/alumni/all");
-//     console.log("ALUMNI DATA:", res.data);   // 👈 add this
-//     setAlumni(res.data);
-//   } catch (error) {
-//     console.log("Error fetching alumni:", error);
-//   }
-// };
-//   useEffect(() => {
-//     fetchAlumni();
-//   }, []);
-
-//   return (
-//     <div>
-
-//       <h2>All Alumni</h2>
-
-//       {alumni.length === 0 ? (
-//         <p>No Alumni Found</p>
-//       ) : (
-//         alumni.map((a) => (
-//           <div key={a._id}>
-//             <h3>{a.userId?.name}</h3>
-//             <p>{a.userId?.email}</p>
-//             <p>{a.company}</p>
-//             <p>{a.designation}</p>
-//           </div>
-//         ))
-//       )}
-
-//     </div>
-//   );
-// }
-
-// export default ManageAlumni;

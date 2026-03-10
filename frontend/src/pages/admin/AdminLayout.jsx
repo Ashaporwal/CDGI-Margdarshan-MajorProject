@@ -1,114 +1,121 @@
-// AdminLayout.jsx
-import { useEffect } from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { FaUser, FaUsers, FaClipboardList, FaSignOutAlt, FaTachometerAlt } from "react-icons/fa";
-// import AdminDashboard from "./AdminDashboard";
+import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
+import {
+  FaUser,
+  FaUsers,
+  FaClipboardList,
+  FaSignOutAlt,
+  FaTachometerAlt
+} from "react-icons/fa";
 
 function AdminLayout() {
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    const adminEmail = localStorage.getItem("adminEmail");
-    if (!adminEmail) navigate("/admin/login");
-  }, []);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = () => {
-    localStorage.removeItem("adminEmail");
-    navigate("/admin/login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate("/login");
   };
 
   const sidebarItems = [
-    { title: "Dashboard", icon: <FaTachometerAlt />, route: "/admin/dashboard" },
-    { title: "Manage Students", icon: <FaUser />, route: "/admin/students" },
-    { title: "Manage Alumni", icon: <FaUsers />, route: "/admin/alumni" },
-    // { title: "Manage Notices", icon: <FaClipboardList />, route: "/admin/notices" },
-    { title: "Manage Notices", icon: <FaClipboardList />, route: "/admin/notices" },
+    { name: "Dashboard", icon: <FaTachometerAlt />, path: "/admin/dashboard" },
+    { name: "Manage Students", icon: <FaUser />, path: "/admin/students" },
+    { name: "Manage Alumni", icon: <FaUsers />, path: "/admin/alumni" },
+    { name: "Manage Notices", icon: <FaClipboardList />, path: "/admin/notices" },
   ];
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+
       {/* Sidebar */}
-      <aside className="w-64 bg-white/80 backdrop-blur-lg shadow-lg flex flex-col p-6">
-        <h1 className="text-3xl font-extrabold text-gray-800 mb-10 tracking-tight">Admin Panel</h1>
+      <div className="w-64 bg-white shadow-md p-6 flex flex-col fixed h-screen">
 
-        <nav className="flex-1 space-y-3">
-          {sidebarItems.map((item, idx) => (
-            <NavLink
-              key={idx}
-              to={item.route}
-              className={({ isActive }) =>
-                `flex items-center gap-3 p-3 rounded-xl font-medium transition-colors
-                ${isActive ? "bg-indigo-500 text-white shadow-md" : "text-gray-700 hover:bg-indigo-100 hover:text-indigo-600"}`
-              }
+        {/* Brand */}
+        <div className="flex items-center gap-2 mb-8">
+
+  <span className="text-2xl">🎓</span>
+
+  <span className="font-bold text-gray-900 text-lg">
+    CDGI
+  </span>
+
+  <span className="font-semibold bg-gradient-to-r 
+  from-violet-600 via-purple-500 to-indigo-500 
+  bg-clip-text text-transparent text-lg">
+    Margdarshan
+  </span>
+
+</div>
+
+        {/* Menu */}
+        <div className="flex-1 space-y-2">
+
+          {sidebarItems.map((item) => (
+
+            <div
+              key={item.name}
+              onClick={() => navigate(item.path)}
+              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition
+              ${
+                location.pathname === item.path
+                  ? "bg-violet-100 text-violet-700 font-semibold"
+                  : "text-gray-700 hover:bg-violet-50"
+              }`}
             >
-              {item.icon} <span>{item.title}</span>
-            </NavLink>
+              {item.icon}
+              <span>{item.name}</span>
+            </div>
+
           ))}
-        </nav>
 
-        <button
+        </div>
+
+        {/* Logout */}
+        {/* <button
           onClick={handleLogout}
-          className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl font-semibold transition-all shadow-md mt-auto"
+          className="flex items-center justify-center gap-2 py-3 
+bg-gray-800 text-white rounded-xl 
+hover:bg-gray-900 transition"
         >
-          <FaSignOutAlt /> Logout
-        </button>
-      </aside>
+          <FaSignOutAlt />
+          Logout
+        </button> */}
+        <button
+  onClick={handleLogout}
+  className="flex items-center justify-center gap-2 py-3
+  bg-violet-600 text-white rounded-xl hover:bg-violet-700 transition"
+>
+  <FaSignOutAlt />
+  Logout
+</button>
 
-      {/* Main Content */}
-      <main className="flex-1 p-10 bg-gray-50">
-         {/* <AdminDashboard/> */}
-              <div className="mt-10">
+      </div>
+
+      {/* Right Side */}
+      <div className="flex-1 flex flex-col ml-64">
+
+        {/* Navbar */}
+        <div className="h-16 bg-white shadow flex items-center justify-between px-6">
+
+          <h2 className="text-lg font-semibold text-violet-700">
+            Admin
+          </h2>
+
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 p-8">
+
           <Outlet />
-        </div>
-        <div className="mb-8">
-           
-          {/* <h2 className="text-3xl font-bold text-gray-700 mb-2">Welcome, Admin!</h2> */}
-          {/* <p className="text-gray-500">
-            Manage students, alumni, notices, and all campus-related activities from here.
-          </p> */}
+
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {/* Cards */}
-          <NavLink
-            to="/admin/students"
-            className="flex items-center p-6 rounded-3xl shadow-2xl bg-gradient-to-r from-blue-400 to-blue-600 text-white backdrop-blur-md hover:scale-105 transition-transform"
-          >
-            <FaUser size={28} className="mr-5" />
-            <div>
-              <h3 className="text-xl font-bold">Manage Students</h3>
-              <p className="opacity-90 text-sm">View and verify student accounts</p>
-            </div>
-          </NavLink>
+      </div>
 
-          <NavLink
-            to="/admin/alumni"
-            className="flex items-center p-6 rounded-3xl shadow-2xl bg-gradient-to-r from-green-400 to-green-600 text-white backdrop-blur-md hover:scale-105 transition-transform"
-          >
-            <FaUsers size={28} className="mr-5" />
-            <div>
-              <h3 className="text-xl font-bold">Manage Alumni</h3>
-              <p className="opacity-90 text-sm">Approve alumni registrations</p>
-            </div>
-          </NavLink>
-
-          <NavLink
-            to="/admin/notices"
-            className="flex items-center p-6 rounded-3xl shadow-2xl bg-gradient-to-r from-purple-400 to-purple-600 text-white backdrop-blur-md hover:scale-105 transition-transform"
-          >
-            <FaClipboardList size={28} className="mr-5" />
-            <div>
-              <h3 className="text-xl font-bold">Manage Notices</h3>
-              <p className="opacity-90 text-sm">Create and update campus notices</p>
-            </div>
-          </NavLink>
-        </div>
-
-        {/* Nested routes will render here */}
-   
-      </main>
     </div>
   );
 }
 
 export default AdminLayout;
+
