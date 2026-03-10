@@ -22,6 +22,8 @@ export default function Navbar() {
           </span>
         </div>
 
+        
+
 
 
         <div className="hidden md:flex gap-8 text-gray-600 font-medium">
