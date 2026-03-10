@@ -16,6 +16,7 @@ import {
 
 function AlumniLayout() {
     const navigate = useNavigate();
+    // const location = useLocation();
     const [user, setUser] = useState(null);
     const [dark, setDark] = useState(false);
 
@@ -73,10 +74,22 @@ function AlumniLayout() {
         <div className="flex min-h-screen bg-gray-100">
 
             {/* Sidebar */}
-            <div className="w-64 bg-white shadow-md p-6 flex flex-col">
-                <h2 className="text-xl font-bold text-violet-600 mb-6">
-                    Campus Connect
-                </h2>
+            <div className="w-64 bg-white shadow-md p-6 flex flex-col fixed h-screen">
+               <div className="flex items-center gap-2 mb-8">
+
+  <span className="text-2xl">🎓</span>
+
+  <span className="font-bold text-gray-900 text-lg">
+    CDGI
+  </span>
+
+  <span className="font-semibold bg-gradient-to-r 
+  from-violet-600 via-purple-500 to-indigo-500 
+  bg-clip-text text-transparent text-lg">
+    Margdarshan
+  </span>
+
+</div>
 
                 {menuItems.map((item) => (
                     <div
@@ -90,11 +103,18 @@ function AlumniLayout() {
                 ))}
 
                 {/* Logout directly under Profile */}
-                <button onClick={handleLogout} className="mt-6 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition" ><FaSignOutAlt /> Logout </button>
+                {/* <button onClick={handleLogout} className="mt-6 py-2 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition" ><FaSignOutAlt /> Logout </button> */}
+            <button
+                       onClick={handleLogout}
+                       className="flex items-center gap-2 mt-4 p-3 rounded-lg bg-violet-600 text-white hover:bg-violet-700 transition w-full"
+                     >
+                       <FaSignOutAlt />
+                       Logout
+                     </button>
             </div>
 
             {/* Right Side */}
-            <div className="flex-1 flex flex-col">
+            <div className="flex-1 flex flex-col ml-64">
 
                 {/* Navbar */}
                 <div className="h-16 bg-white shadow flex items-center justify-between px-6">
@@ -119,7 +139,7 @@ function AlumniLayout() {
                             <img
                                 src={
                                     user?.photo
-                                        ? `http://localhost:3000/uploads/${user.photo}`
+                                        ? `http://localhost:3000/uploads/photos/${user.photo}`
                                         : "/default.avif"
                                 }
                                 alt="profile"

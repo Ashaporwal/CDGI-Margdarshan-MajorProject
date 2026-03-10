@@ -262,8 +262,16 @@ function AlumniProfile() {
         setProfileExists(true); // ✅ profile exists
 
       } catch (err) {
-        console.log("No profile yet");
-        setProfileExists(false); // ✅ profile not exists
+        // console.log("No profile yet");
+        // setProfileExists(false); // ✅ profile not exists
+
+        if (err.response?.status === 404) {
+        // normal case for new alumni
+        setProfileExists(false);
+      } else {
+        console.log("Error fetching profile");
+      }
+
       }
     };
 
@@ -280,34 +288,73 @@ function AlumniProfile() {
   };
 
   // ================= SAVE =================
+  // const handleSubmit = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const payload = {
+  //       ...profile,
+  //       skills: profile.skills
+  //         ? profile.skills.split(",").map(s => s.trim())
+  //         : [],
+  //     };
+
+  //     if (profileExists) {
+  //       // ✅ UPDATE
+  //       await API.put("/api/alumni", payload);
+  //     } else {
+  //       // ✅ CREATE
+  //       await API.post("/api/alumni", payload);
+  //       setProfileExists(true);
+  //     }
+
+  //     toast.success("Profile saved successfully 🎉");
+
+  //   } catch (err) {
+  //     toast.error("Save failed");
+  //   }
+
+  //   setLoading(false);
+  // };
   const handleSubmit = async () => {
-    try {
-      setLoading(true);
 
-      const payload = {
-        ...profile,
-        skills: profile.skills
-          ? profile.skills.split(",").map(s => s.trim())
-          : [],
-      };
+  try {
 
-      if (profileExists) {
-        // ✅ UPDATE
-        await API.put("/api/alumni", payload);
-      } else {
-        // ✅ CREATE
-        await API.post("/api/alumni", payload);
-        setProfileExists(true);
-      }
+    setLoading(true);
 
-      toast.success("Profile saved successfully 🎉");
+    const payload = {
+      ...profile,
 
-    } catch (err) {
-      toast.error("Save failed");
+      experienceYears: profile.experienceYears
+    ? Number(profile.experienceYears)
+    : 0,
+    
+      skills: profile.skills
+        ? profile.skills.split(",").map(s => s.trim())
+        : [],
+    };
+
+    if (profileExists) {
+
+      await API.put("/api/alumni", payload);
+
+    } else {
+
+      await API.post("/api/alumni", payload);
+      setProfileExists(true);
+
     }
 
-    setLoading(false);
-  };
+    toast.success("Profile saved successfully");
+
+  } catch {
+
+    toast.error("Save failed");
+
+  }
+
+  setLoading(false);
+};
 
   return (
     <>

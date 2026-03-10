@@ -58,7 +58,7 @@ function ProfilePhoto() {
         <img
           src={
             user?.photo
-              ? `http://localhost:3000/uploads/${user.photo}`
+              ? `http://localhost:3000/uploads/photos/${user.photo}`
               : "/default.avif"
           }
           alt="profile"
