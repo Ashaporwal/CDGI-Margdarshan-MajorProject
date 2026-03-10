@@ -14,17 +14,17 @@ const alumniSchema = new mongoose.Schema(
 
   company: {
     type: String,
-    required: true
+    // required: true
   },
 
   designation: {
     type: String,
-    required: true
+    // required: true
   },
 
   experienceYears: {
     type: Number,
-    required: true
+    // required: true
   },
 
   bio: String,

@@ -16,9 +16,9 @@ router.post(
   "/",
   protect,
 
-  body("company", "Company is required").notEmpty(),
-  body("designation", "Designation is required").notEmpty(),
-  body("experienceYears", "Experience must be number").isNumeric(),
+  // body("company", "Company is required").notEmpty(),
+  // body("designation", "Designation is required").notEmpty(),
+  // body("experienceYears", "Experience must be number").isNumeric(),
 
   validate,
   createAlumniProfile

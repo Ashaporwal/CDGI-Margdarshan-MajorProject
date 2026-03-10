@@ -33,9 +33,12 @@ export const getMyAlumniProfile = async (req, res) => {
     const profile = await AlumniProfile.findOne({ userId: req.user.id })
       .populate("userId", "name email department graduationYear");
 
+    // if (!profile) {
+    //   return res.status(404).json({ message: "Profile not found" });
+    // }
     if (!profile) {
-      return res.status(404).json({ message: "Profile not found" });
-    }
+  return res.status(200).json(null);
+}
 
     res.status(200).json(profile);
 
