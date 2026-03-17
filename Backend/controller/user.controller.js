@@ -93,12 +93,42 @@ export const register = async (req, res) => {
 
     // ===== CREATE STUDENT PROFILE =====
     if (role === "student") {
-      await StudentProfile.create({
-        userId: user._id,
-        enrollmentNumber: enrollmentNumber,
-        course: department,
-        yearOfStudy: 1,
-      });
+      //   await StudentProfile.create({
+      //     userId: user._id,
+      //     enrollmentNumber: enrollmentNumber,
+      //     course: department,
+      //     yearOfStudy: 1,
+      //   });
+      // }
+      try {
+
+        const currentYear = new Date().getFullYear();
+        let yearOfStudy = 4 - (Number(graduationYear) - currentYear);
+
+        if (yearOfStudy < 1) yearOfStudy = 1;
+        if (yearOfStudy > 4) yearOfStudy = 4;
+
+        await StudentProfile.create({
+          userId: user._id,
+          enrollmentNumber: enrollmentNumber,
+          course: department,
+          yearOfStudy: yearOfStudy,
+        });
+      } catch (profileErr) {
+        //        console.log("Profile error code:", profileErr.code);
+        // console.log("Profile error message:", profileErr.message);
+
+        await User.findByIdAndDelete(user._id);
+
+        if (profileErr.code === 11000) {
+          return res.status(400).json({
+            message: "Enrollment number already registered!"
+          });
+        }
+        return res.status(400).json({
+          message: "Profile creation failed"
+        });
+      }
     }
 
     res.status(201).json({
@@ -152,7 +182,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-      
+
       },
     });
   }

@@ -77,11 +77,13 @@ export const getAllStudents = async (req,res)=>{
 
     const students = await StudentProfile
       .find()
-      .populate("userId","name email graduationYear")
+      .populate("userId","name email graduationYear department")
       .sort({createdAt:-1});
 
+      const validStudents = students.filter((s) => s.userId !== null);
+
     res.status(200).json({
-      profiles: students
+      profiles: validStudents
     });
 
   }catch(err){
