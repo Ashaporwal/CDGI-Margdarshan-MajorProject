@@ -319,7 +319,7 @@
 // export default ProfilePage;
 import { useState, useEffect } from "react";
 import API from "../../services/api";
-import { toast } from "react-toastify";
+import { toast ,ToastContainer} from "react-toastify";
 import Profile from "./Profile";
 import { FaGraduationCap, FaFileAlt, FaLink, FaUser } from "react-icons/fa";
 
@@ -598,10 +598,11 @@ function ProfilePage() {
         </div>
 
       </div>
-
+<ToastContainer/>
     </div>
 
   );
+ 
 
 }
 

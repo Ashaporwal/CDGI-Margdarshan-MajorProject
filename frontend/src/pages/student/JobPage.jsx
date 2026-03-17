@@ -1,625 +1,531 @@
-// import { useState, useEffect } from "react";
-// import API from "../../services/api";
-// import { toast, ToastContainer } from "react-toastify";
-// import { Link } from "react-router-dom";
-// import "react-toastify/dist/ReactToastify.css";
-
-// function JobPage() {
-//   const [jobs, setJobs] = useState([]);
-//   const [filteredJobs, setFilteredJobs] = useState([]);
-//   const [form, setForm] = useState({
-//     title: "",
-//     company: "",
-//     jobType: "Full-time",
-//     location: "",
-//     salary: "",
-//     description: "",
-//     deadline: "",
-//   });
-
-//   const [showForm, setShowForm] = useState(false);
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [filterType, setFilterType] = useState("All");
-
-//   const token = localStorage.getItem("token");
-//   const role = localStorage.getItem("role");
-
-//   useEffect(() => {
-//     fetchJobs();
-//   }, []);
-
-//   useEffect(() => {
-//     filterJobs();
-//   }, [searchQuery, filterType, jobs]);
-
-//   const fetchJobs = async () => {
-//     try {
-//       const { data } = await API.get("/job", {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       setJobs(data.jobs);
-//     } catch (err) {
-//       toast.error("Failed to fetch jobs");
-//     }
-//   };
-
-//   const filterJobs = () => {
-//     let temp = jobs;
-//     if (searchQuery) {
-//       temp = temp.filter(
-//         (job) =>
-//           job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//           job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//           job.location.toLowerCase().includes(searchQuery.toLowerCase())
-//       );
-//     }
-//     if (filterType !== "All") {
-//       temp = temp.filter((job) => job.jobType === filterType);
-//     }
-//     setFilteredJobs(temp);
-//   };
-
-//   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     try {
-//       const { data } = await API.post("/job", form, {
-//         headers: { Authorization: `Bearer ${token}` },
-//       });
-//       toast.success(data.message);
-//       setForm({
-//         title: "",
-//         company: "",
-//         jobType: "Full-time",
-//         location: "",
-//         salary: "",
-//         description: "",
-//         deadline: "",
-//       });
-//       fetchJobs();
-//       setShowForm(false);
-//     } catch (err) {
-//       toast.error(err.response?.data?.message || "Failed to post job");
-//     }
-//   };
-
-//   return (
-//     <div className="p-6 md:p-10 bg-gray-50 min-h-screen">
-//       <h2 className="text-3xl font-bold mb-6 text-gray-800 text-center md:text-left">Jobs</h2>
-
-//       {/* Job Form */}
-//       {(role === "admin" || role === "alumni") && (
-//         <div className="mb-8 text-center md:text-left">
-//           <button
-//             onClick={() => setShowForm(!showForm)}
-//             className="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition"
-//           >
-//             {showForm ? "Close Form" : "Post New Job"}
-//           </button>
-
-//           {showForm && (
-//             <form onSubmit={handleSubmit} className="bg-white p-6 md:p-8 mt-4 rounded-lg shadow space-y-4">
-//               <input
-//                 type="text"
-//                 name="title"
-//                 placeholder="Job Title"
-//                 value={form.title}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                 required
-//               />
-//               <input
-//                 type="text"
-//                 name="company"
-//                 placeholder="Company Name"
-//                 value={form.company}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                 required
-//               />
-//               <select
-//                 name="jobType"
-//                 value={form.jobType}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//               >
-//                 <option>Full-time</option>
-//                 <option>Internship</option>
-//                 <option>Campus Drive</option>
-//               </select>
-//               <input
-//                 type="text"
-//                 name="location"
-//                 placeholder="Location"
-//                 value={form.location}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                 required
-//               />
-//               <input
-//                 type="text"
-//                 name="salary"
-//                 placeholder="Salary (optional)"
-//                 value={form.salary}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//               />
-//               <textarea
-//                 name="description"
-//                 placeholder="Job Description"
-//                 value={form.description}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                 required
-//               />
-//               <input
-//                 type="date"
-//                 name="deadline"
-//                 value={form.deadline}
-//                 onChange={handleChange}
-//                 className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//                 required
-//               />
-//               <button
-//                 type="submit"
-//                 className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition w-full"
-//               >
-//                 Post Job
-//               </button>
-//             </form>
-//           )}
-//         </div>
-//       )}
-
-//       {/* Search & Filter */}
-//       <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-//         <input
-//           type="text"
-//           placeholder="Search by title, company, location..."
-//           value={searchQuery}
-//           onChange={(e) => setSearchQuery(e.target.value)}
-//           className="w-full md:w-1/2 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-//         />
-//         <div className="flex gap-2">
-//           {["All", "Full-time", "Internship", "Campus Drive"].map((type) => (
-//             <button
-//               key={type}
-//               onClick={() => setFilterType(type)}
-//               className={`px-4 py-2 rounded-lg border ${
-//                 filterType === type
-//                   ? "bg-blue-600 text-white border-blue-600"
-//                   : "bg-white text-gray-700 border-gray-300"
-//               } transition`}
-//             >
-//               {type}
-//             </button>
-//           ))}
-//         </div>
-//       </div>
-
-//       {/* Job Listings */}
-//       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-//         {filteredJobs.length === 0 && (
-//           <p className="text-gray-500 col-span-full text-center">No jobs match your search/filter.</p>
-//         )}
-
-//         {filteredJobs.map((job) => {
-//           const daysLeft = Math.ceil((new Date(job.deadline) - new Date()) / (1000 * 60 * 60 * 24));
-//           return (
-//             <div
-//               key={job._id}
-//               className="bg-white p-5 rounded-lg shadow hover:shadow-md transition transform hover:-translate-y-1"
-//             >
-//               <h3 className="text-lg font-semibold text-gray-800 mb-1">{job.title}</h3>
-//               <p className="text-gray-600 mb-1">{job.company} - {job.location}</p>
-//               <p className="text-gray-500 mb-2">{job.jobType} | Salary: {job.salary || "N/A"}</p>
-//               <p className="text-gray-700 mb-3 line-clamp-3">{job.description}</p>
-//               <p className={`text-sm mb-1 ${daysLeft <= 3 ? "text-red-500 font-semibold" : "text-gray-400"}`}>
-//                 Deadline: {new Date(job.deadline).toLocaleDateString()} {daysLeft <= 3 ? `(Hurry! ${daysLeft} days left)` : ""}
-//               </p>
-//               <p className="text-sm text-gray-500">
-//                 Posted by: {job.postedBy ? (
-//                   <Link to={`/profile/${job.postedBy._id}`} className="text-blue-600 hover:underline">
-//                     {job.postedBy.name}
-//                   </Link>
-//                 ) : "Unknown"}
-//               </p>
-//             </div>
-//           );
-//         })}
-//       </div>
-
-//       <ToastContainer position="top-right" autoClose={3000} />
-//     </div>
-//   );
-// }
-
-// export default JobPage;
-
-
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import API from "../../services/api";
 import { toast, ToastContainer } from "react-toastify";
-import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  FiBriefcase, FiMapPin, FiClock, FiDollarSign,
+  FiCalendar, FiUser, FiChevronLeft, FiChevronRight,
+  FiChevronUp, FiChevronDown,
+  FiAward, FiUsers, FiCheckCircle, FiAlertCircle, FiXCircle
+} from "react-icons/fi";
 
-function JobPage() {
+// ── Constants ─────────────────────────────────────────────
+const ITEMS_PER_PAGE = 9;
 
-  const [jobs, setJobs] = useState([]);
-  const [filteredJobs, setFilteredJobs] = useState([]);
-
-  const [form, setForm] = useState({
-    title: "",
-    company: "",
-    jobType: "Full-time",
-    location: "",
-    salary: "",
-    description: "",
-    deadline: "",
+// ── Helpers ───────────────────────────────────────────────
+function formatDate(dateStr) {
+  if (!dateStr) return "N/A";
+  return new Date(dateStr).toLocaleDateString("en-IN", {
+    day: "numeric", month: "short", year: "numeric",
   });
-
-  const [showForm, setShowForm] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterType, setFilterType] = useState("All");
-
-  const token = localStorage.getItem("token");
-  const role = localStorage.getItem("role");
-
-
-  useEffect(()=>{
-    fetchJobs();
-  },[]);
-
-
-  useEffect(()=>{
-    filterJobs();
-  },[searchQuery,filterType,jobs]);
-
-
-  const fetchJobs = async()=>{
-    try{
-
-      const {data} = await API.get("/api/jobs",{
-        headers:{Authorization:`Bearer ${token}`}
-      });
-
-      setJobs(data.jobs);
-
-    }catch{
-      toast.error("Failed to fetch jobs");
-    }
-  };
-
-
-  const filterJobs = ()=>{
-
-    let temp = jobs;
-
-    if(searchQuery){
-
-      temp = temp.filter(job =>
-        job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        job.location.toLowerCase().includes(searchQuery.toLowerCase())
-      );
-
-    }
-
-    if(filterType !== "All"){
-      temp = temp.filter(job => job.jobType === filterType);
-    }
-
-    setFilteredJobs(temp);
-
-  };
-
-
-  const handleChange = (e)=>{
-    setForm({...form,[e.target.name]:e.target.value});
-  };
-
-
-  const handleSubmit = async(e)=>{
-
-    e.preventDefault();
-
-    try{
-
-      const {data} = await API.post("/api/jobs",form,{
-        headers:{Authorization:`Bearer ${token}`}
-      });
-
-      toast.success(data.message);
-
-      setForm({
-        title:"",
-        company:"",
-        jobType:"Full-time",
-        location:"",
-        salary:"",
-        description:"",
-        deadline:""
-      });
-
-      fetchJobs();
-      setShowForm(false);
-
-    }catch(err){
-
-      toast.error(err.response?.data?.message || "Failed to post job");
-
-    }
-
-  };
-
-
-  return (
-
-<div className="p-6 md:p-10 bg-gray-50 min-h-screen">
-
-<h2 className="text-3xl font-bold mb-6 text-gray-800">
-Job Opportunities
-</h2>
-
-
-
-{/* Post Job Button */}
-
-{(role === "admin" || role === "alumni") && (
-
-<div className="mb-6">
-
-<button
-onClick={()=>setShowForm(!showForm)}
-className="bg-blue-600 text-white px-6 py-2 rounded-lg shadow hover:bg-blue-700"
->
-
-{showForm ? "Close Form" : "Post New Job"}
-
-</button>
-
-
-{showForm && (
-
-<form
-onSubmit={handleSubmit}
-className="bg-white p-6 mt-4 rounded-xl shadow space-y-4"
->
-
-<input
-type="text"
-name="title"
-placeholder="Job Title"
-value={form.title}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-required
-/>
-
-<input
-type="text"
-name="company"
-placeholder="Company"
-value={form.company}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-required
-/>
-
-<select
-name="jobType"
-value={form.jobType}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
->
-
-<option>Full-time</option>
-<option>Internship</option>
-
-</select>
-
-<input
-type="text"
-name="location"
-placeholder="Location"
-value={form.location}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-required
-/>
-
-<input
-type="text"
-name="salary"
-placeholder="Salary"
-value={form.salary}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-/>
-
-<textarea
-name="description"
-placeholder="Job Description"
-value={form.description}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-required
-/>
-
-<input
-type="date"
-name="deadline"
-value={form.deadline}
-onChange={handleChange}
-className="w-full border p-3 rounded-lg"
-required
-/>
-
-<button
-className="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700"
->
-
-Post Job
-
-</button>
-
-</form>
-
-)}
-
-</div>
-
-)}
-
-
-
-{/* Search + Filter */}
-
-<div className="flex flex-col md:flex-row gap-4 mb-6">
-
-<input
-type="text"
-placeholder="Search jobs..."
-value={searchQuery}
-onChange={(e)=>setSearchQuery(e.target.value)}
-className="border p-3 rounded-lg w-full md:w-1/2"
-/>
-
-
-<div className="flex gap-2">
-
-{["All","Full-time","Internship"].map(type => (
-
-<button
-key={type}
-onClick={()=>setFilterType(type)}
-className={`px-4 py-2 rounded-lg border ${
-filterType === type
-? "bg-blue-600 text-white"
-: "bg-white"
-}`}
->
-
-{type}
-
-</button>
-
-))}
-
-</div>
-
-</div>
-
-
-
-{/* Job Cards */}
-
-<div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-{filteredJobs.length === 0 && (
-
-<p className="text-gray-500 col-span-full">
-No jobs available
-</p>
-
-)}
-
-
-
-{filteredJobs.map(job=>{
-
-const daysLeft = Math.ceil(
-(new Date(job.deadline) - new Date())/(1000*60*60*24)
-);
-
-return(
-
-<div
-key={job._id}
-className="bg-white p-5 rounded-xl shadow hover:shadow-lg transition"
->
-
-<div className="flex justify-between items-start mb-2">
-
-<h3 className="text-lg font-semibold">
-{job.title}
-</h3>
-
-<span
-className={`text-xs px-3 py-1 rounded-full ${
-job.jobType === "Internship"
-? "bg-purple-100 text-purple-600"
-: "bg-green-100 text-green-600"
-}`}
->
-
-{job.jobType}
-
-</span>
-
-</div>
-
-
-
-<p className="text-gray-700 font-medium">
-{job.company}
-</p>
-
-<p className="text-gray-500 text-sm">
-{job.location}
-</p>
-
-
-
-{job.salary && (
-
-<span className="inline-block mt-2 text-xs bg-gray-100 px-3 py-1 rounded">
-Salary: {job.salary}
-</span>
-
-)}
-
-
-
-<p className="text-gray-600 mt-3 text-sm line-clamp-3">
-{job.description}
-</p>
-
-
-
-<p className={`text-sm mt-3 ${
-daysLeft <= 3 ? "text-red-500 font-semibold" : "text-gray-500"
-}`}>
-
-Deadline: {new Date(job.deadline).toLocaleDateString()}
-
-{daysLeft <= 3 && ` (Only ${daysLeft} days left)`}
-
-</p>
-
-
-
-<p className="text-xs text-gray-400 mt-2">
-
-Posted by: {job.postedBy?.name}
-
-</p>
-
-</div>
-
-);
-
-})}
-
-</div>
-
-<ToastContainer/>
-
-</div>
-
-  );
-
 }
 
-export default JobPage;
+function DeadlineBadge({ deadline }) {
+  if (!deadline) return null;
+  const days = Math.ceil((new Date(deadline) - new Date()) / (1000 * 60 * 60 * 24));
+  if (days < 0)
+    return (
+      <span className="flex items-center gap-1 text-xs text-gray-400">
+        <FiXCircle size={11} /> Closed
+      </span>
+    );
+  if (days <= 3)
+    return (
+      <span className="flex items-center gap-1 text-xs text-red-500 font-semibold animate-pulse">
+        <FiAlertCircle size={11} /> {days}d left
+      </span>
+    );
+  return (
+    <span className="flex items-center gap-1 text-xs text-gray-400">
+      <FiCalendar size={11} /> {formatDate(deadline)}
+    </span>
+  );
+}
+
+// ── Job Card ──────────────────────────────────────────────
+function JobCard({ job }) {
+  const [expanded, setExpanded] = useState(false);
+  const isInternship = job.jobType === "Internship";
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100
+    dark:border-gray-700 p-5 flex flex-col gap-3 hover:shadow-md
+    transition-all duration-200 hover:-translate-y-0.5">
+
+      {/* Top row */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-base leading-snug truncate">
+            {job.title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400 font-medium mt-0.5">
+            {job.company}
+          </p>
+        </div>
+        <span className={`shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full
+        ${isInternship
+          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+          : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+        }`}>
+          {job.jobType}
+        </span>
+      </div>
+
+      {/* Meta */}
+      <div className="flex flex-wrap gap-3 text-xs text-gray-400 dark:text-gray-500">
+        <span className="flex items-center gap-1">
+          <FiMapPin size={11} /> {job.location}
+        </span>
+        {job.salary && (
+          <span className="flex items-center gap-1">
+            <FiDollarSign size={11} /> {job.salary}
+          </span>
+        )}
+        {job.minCGPA && (
+          <span className="flex items-center gap-1">
+            <FiAward size={11} /> Min CGPA: {job.minCGPA}
+          </span>
+        )}
+      </div>
+
+      {/* Skills */}
+      {job.skills?.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {job.skills.slice(0, 4).map((s, i) => (
+            <span key={i} className="text-xs bg-violet-50 dark:bg-violet-900/20
+            text-violet-600 dark:text-violet-300 px-2 py-0.5 rounded-full">
+              {s}
+            </span>
+          ))}
+          {job.skills.length > 4 && (
+            <span className="text-xs text-gray-400">+{job.skills.length - 4}</span>
+          )}
+        </div>
+      )}
+
+      {/* Description */}
+      {job.description && (
+        <div className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+          <p>
+            {expanded
+              ? job.description
+              : job.description.slice(0, 100) + (job.description.length > 100 ? "..." : "")}
+          </p>
+          {job.description.length > 100 && (
+            <button
+              onClick={() => setExpanded(!expanded)}
+              className="text-xs text-violet-500 hover:text-violet-700 mt-1 font-medium"
+            >
+              {expanded ? "Read Less" : "Read More"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex items-center justify-between pt-2 mt-auto
+      border-t border-gray-100 dark:border-gray-700">
+        <DeadlineBadge deadline={job.deadline} />
+        <span className="flex items-center gap-1 text-xs text-gray-400">
+          <FiUser size={11} />
+          {job.postedBy?.name || "Admin"}
+          {job.postedBy?.role === "alumni" && (
+            <span className="ml-1 text-xs bg-blue-100 text-blue-600
+            dark:bg-blue-900/30 dark:text-blue-300 px-1.5 rounded-full">
+              Alumni
+            </span>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ── Campus Drive Card ─────────────────────────────────────
+function DriveCard({ drive }) {
+  const [showDesc, setShowDesc]   = useState(false);
+  const [showElig, setShowElig]   = useState(false);
+
+  const STATUS_STYLES = {
+    upcoming:  { badge: "bg-blue-50 text-blue-600 border border-blue-200",    icon: <FiClock size={11} />,       label: "Upcoming"  },
+    completed: { badge: "bg-green-50 text-green-600 border border-green-200", icon: <FiCheckCircle size={11} />, label: "Completed" },
+    cancelled: { badge: "bg-red-50 text-red-500 border border-red-200",       icon: <FiXCircle size={11} />,     label: "Cancelled" },
+  };
+  const s = STATUS_STYLES[drive.status] || STATUS_STYLES.upcoming;
+
+  const isLongDesc = drive.description?.length > 100;
+  const isLongElig = drive.eligibilityCriteria?.length > 80;
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100
+    dark:border-gray-700 border-l-4 border-l-violet-400 p-5 flex flex-col gap-4
+    hover:shadow-md transition-all duration-200">
+
+      {/* ── Row 1: Company + Status ── */}
+      <div className="flex items-start justify-between gap-2">
+        <div className="flex-1 min-w-0">
+          <h3 className="font-bold text-gray-800 dark:text-gray-100 text-base leading-snug">
+            {drive.companyName}
+          </h3>
+          <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+            <FiMapPin size={11} /> {drive.location}
+          </p>
+        </div>
+        <span className={`shrink-0 flex items-center gap-1 text-xs font-semibold
+        px-2.5 py-1 rounded-full ${s.badge}`}>
+          {s.icon} {s.label}
+        </span>
+      </div>
+
+      {/* ── Row 2: Job Roles ── */}
+      {drive.jobRoles?.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {drive.jobRoles.map((role, i) => (
+            <span key={i} className="text-xs font-medium bg-violet-50 dark:bg-violet-900/20
+            text-violet-600 dark:text-violet-300 px-2.5 py-1 rounded-full border
+            border-violet-100 dark:border-violet-800">
+              {role}
+            </span>
+          ))}
+        </div>
+      )}
+
+      {/* ── Row 3: Date + Package ── */}
+      <div className="flex flex-wrap gap-4 text-xs">
+        <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400
+        bg-gray-50 dark:bg-gray-700/50 px-2.5 py-1.5 rounded-lg">
+          <FiCalendar size={11} className="text-violet-400" />
+          {formatDate(drive.driveDate)}
+          {drive.time && (
+            <span className="text-gray-400"> · {drive.time}</span>
+          )}
+        </span>
+        {drive.packageOffered && (
+          <span className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400
+          bg-gray-50 dark:bg-gray-700/50 px-2.5 py-1.5 rounded-lg">
+            <FiDollarSign size={11} className="text-green-400" />
+            {drive.packageOffered}
+          </span>
+        )}
+      </div>
+
+      {/* ── Row 4: Eligibility (collapsible) ── */}
+      {drive.eligibilityCriteria && (
+        <div className="bg-amber-50 dark:bg-amber-900/10 border border-amber-100
+        dark:border-amber-800/30 rounded-xl px-3 py-2.5">
+          <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
+            📋 {showElig
+              ? drive.eligibilityCriteria
+              : drive.eligibilityCriteria.slice(0, 190) + (isLongElig ? "..." : "")}
+          </p>
+          {isLongElig && (
+            <button
+              onClick={() => setShowElig(!showElig)}
+              className="text-xs text-amber-600 hover:text-amber-800 font-semibold mt-1"
+            >
+              {showElig ? "Show Less ↑" : "Show More ↓"}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Row 5: Description (collapsible) ── */}
+      {drive.description && (
+        <div className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+          <p>
+            {showDesc
+              ? drive.description
+              : drive.description.slice(0, 100) + (isLongDesc ? "..." : "")}
+          </p>
+          {isLongDesc && (
+            <button
+              onClick={() => setShowDesc(!showDesc)}
+              className="flex items-center gap-1 mt-1.5 text-xs font-semibold
+              text-violet-500 hover:text-violet-700 transition"
+            >
+              {showDesc
+                ? <><FiChevronUp size={13} /> Read Less</>
+                : <><FiChevronDown size={13} /> Read More</>
+              }
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ── Row 6: Footer ── */}
+      <div className="flex items-center justify-between pt-2
+      border-t border-gray-100 dark:border-gray-700 mt-auto">
+        <div className="flex items-center gap-3 text-xs text-gray-400">
+          {drive.totalRegistrations > 0 && (
+            <span className="flex items-center gap-1">
+              <FiUsers size={11} /> {drive.totalRegistrations} registered
+            </span>
+          )}
+          {drive.studentsPlaced > 0 && (
+            <span className="flex items-center gap-1 text-green-500 font-medium">
+              <FiCheckCircle size={11} /> {drive.studentsPlaced} placed
+            </span>
+          )}
+        </div>
+        <span className="flex items-center gap-1 text-xs text-gray-400">
+          <FiUser size={11} /> {drive.createdBy?.name || "Admin"}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+// ── Pagination ────────────────────────────────────────────
+function Pagination({ currentPage, totalPages, setCurrentPage }) {
+  if (totalPages <= 1) return null;
+  return (
+    <div className="flex items-center justify-center gap-1 pt-4">
+      <button
+        onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+        disabled={currentPage === 1}
+        className="p-2 rounded-lg border border-gray-200 dark:border-gray-600
+        text-gray-500 hover:bg-violet-50 hover:text-violet-600
+        disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        <FiChevronLeft size={14} />
+      </button>
+
+      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+        <button
+          key={page}
+          onClick={() => setCurrentPage(page)}
+          className={`w-8 h-8 rounded-lg text-xs font-semibold transition
+          ${currentPage === page
+            ? "bg-violet-600 text-white shadow-sm"
+            : "border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+
+      <button
+        onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+        disabled={currentPage === totalPages}
+        className="p-2 rounded-lg border border-gray-200 dark:border-gray-600
+        text-gray-500 hover:bg-violet-50 hover:text-violet-600
+        disabled:opacity-30 disabled:cursor-not-allowed transition"
+      >
+        <FiChevronRight size={14} />
+      </button>
+    </div>
+  );
+}
+
+// ── Main Page ─────────────────────────────────────────────
+export default function JobPage() {
+  const [activeTab, setActiveTab]     = useState("jobs");
+  const [jobs, setJobs]               = useState([]);
+  const [drives, setDrives]           = useState([]);
+  const [loadingJobs, setLoadingJobs]     = useState(true);
+  const [loadingDrives, setLoadingDrives] = useState(true);
+
+  // Jobs filters
+  const [jobSearch, setJobSearch] = useState("");
+  const [jobType, setJobType]     = useState("All");
+  const [jobPage, setJobPage]     = useState(1);
+
+  // Drives filters
+  const [driveSearch, setDriveSearch]   = useState("");
+  const [driveStatus, setDriveStatus]   = useState("All");
+  const [drivePage, setDrivePage]       = useState(1);
+
+  // ── Fetch ──────────────────────────────────────────────
+  useEffect(() => {
+    API.get("/api/jobs")
+      .then(({ data }) => setJobs(data.jobs || []))
+      .catch(() => toast.error("Failed to fetch jobs"))
+      .finally(() => setLoadingJobs(false));
+  }, []);
+
+  useEffect(() => {
+    API.get("/api/campus-drives")
+      .then(({ data }) => setDrives(data.drives || []))
+      .catch(() => toast.error("Failed to fetch campus drives"))
+      .finally(() => setLoadingDrives(false));
+  }, []);
+
+  // ── Filter ─────────────────────────────────────────────
+  const filteredJobs = useMemo(() => jobs.filter(j => {
+    const q = jobSearch.toLowerCase();
+    const matchSearch = !q ||
+      j.title?.toLowerCase().includes(q) ||
+      j.company?.toLowerCase().includes(q) ||
+      j.location?.toLowerCase().includes(q);
+    const matchType = jobType === "All" || j.jobType === jobType;
+    return matchSearch && matchType;
+  }), [jobs, jobSearch, jobType]);
+
+  const filteredDrives = useMemo(() => drives.filter(d => {
+    const q = driveSearch.toLowerCase();
+    const matchSearch = !q ||
+      d.companyName?.toLowerCase().includes(q) ||
+      d.location?.toLowerCase().includes(q) ||
+      d.jobRoles?.some(r => r.toLowerCase().includes(q));
+    const matchStatus = driveStatus === "All" || d.status === driveStatus;
+    return matchSearch && matchStatus;
+  }), [drives, driveSearch, driveStatus]);
+
+  const paginatedJobs   = filteredJobs.slice((jobPage - 1) * ITEMS_PER_PAGE, jobPage * ITEMS_PER_PAGE);
+  const paginatedDrives = filteredDrives.slice((drivePage - 1) * ITEMS_PER_PAGE, drivePage * ITEMS_PER_PAGE);
+
+  return (
+    <div className="space-y-6">
+      <ToastContainer position="top-right" autoClose={3000} />
+
+      {/* ── Header ── */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 flex items-center gap-2">
+          <FiBriefcase className="text-violet-500" />
+          Job Opportunities
+        </h1>
+        <p className="text-sm text-gray-400 mt-0.5">
+          Jobs posted by alumni & official campus drives from placement cell
+        </p>
+      </div>
+
+      {/* ── Tabs ── */}
+      <div className="flex gap-1 bg-gray-100 dark:bg-gray-700/50 p-1 rounded-xl w-fit">
+        {[
+          { key: "jobs",   label: "All Jobs",      icon: <FiBriefcase size={14} />, count: jobs.length   },
+          { key: "drives", label: "Campus Drives",  icon: <FiAward size={14} />,    count: drives.length },
+        ].map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition
+            ${activeTab === tab.key
+              ? "bg-white dark:bg-gray-800 text-violet-600 shadow-sm"
+              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            }`}
+          >
+            {tab.icon}
+            {tab.label}
+            <span className={`text-xs px-1.5 py-0.5 rounded-full
+            ${activeTab === tab.key
+              ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600"
+              : "bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300"
+            }`}>
+              {tab.count}
+            </span>
+          </button>
+        ))}
+      </div>
+
+      {/* ── Jobs Tab ── */}
+      {activeTab === "jobs" && (
+        <div className="space-y-5">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border
+          border-gray-100 dark:border-gray-700 shadow-sm p-4 space-y-3">
+            <input
+              type="text"
+              value={jobSearch}
+              onChange={(e) => { setJobSearch(e.target.value); setJobPage(1); }}
+              placeholder="🔍 Search by title, company, location..."
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-xl
+              px-4 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100
+              focus:ring-2 focus:ring-violet-400 focus:outline-none transition"
+            />
+            <div className="flex items-center gap-2 flex-wrap">
+              {["All", "Full-time", "Internship"].map(t => (
+                <button
+                  key={t}
+                  onClick={() => { setJobType(t); setJobPage(1); }}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition
+                  ${jobType === t
+                    ? "bg-violet-600 text-white shadow-sm"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+                  }`}
+                >{t}</button>
+              ))}
+              <span className="ml-auto text-xs text-gray-400">
+                {filteredJobs.length} job{filteredJobs.length !== 1 ? "s" : ""}
+              </span>
+            </div>
+          </div>
+
+          {loadingJobs ? (
+            <p className="text-center py-20 text-gray-400 text-sm">Loading jobs...</p>
+          ) : paginatedJobs.length === 0 ? (
+            <div className="flex flex-col items-center py-20 text-gray-400">
+              <FiBriefcase size={40} className="mb-3 opacity-30" />
+              <p className="text-sm font-medium">No jobs found</p>
+              <p className="text-xs mt-1">Try changing filters</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-4">
+              {paginatedJobs.map(job => <JobCard key={job._id} job={job} />)}
+            </div>
+          )}
+
+          <Pagination
+            currentPage={jobPage}
+            totalPages={Math.ceil(filteredJobs.length / ITEMS_PER_PAGE)}
+            setCurrentPage={setJobPage}
+          />
+        </div>
+      )}
+
+      {/* ── Campus Drives Tab ── */}
+      {activeTab === "drives" && (
+        <div className="space-y-5">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl border
+          border-gray-100 dark:border-gray-700 shadow-sm p-4 space-y-3">
+            <input
+              type="text"
+              value={driveSearch}
+              onChange={(e) => { setDriveSearch(e.target.value); setDrivePage(1); }}
+              placeholder="🔍 Search by company, role, location..."
+              className="w-full border border-gray-200 dark:border-gray-600 rounded-xl
+              px-4 py-2 text-sm bg-white dark:bg-gray-700 dark:text-gray-100
+              focus:ring-2 focus:ring-violet-400 focus:outline-none transition"
+            />
+            <div className="flex items-center gap-2 flex-wrap">
+              {["All", "upcoming", "completed", "cancelled"].map(s => (
+                <button
+                  key={s}
+                  onClick={() => { setDriveStatus(s); setDrivePage(1); }}
+                  className={`px-3 py-1.5 rounded-full text-xs font-semibold transition capitalize
+                  ${driveStatus === s
+                    ? "bg-violet-600 text-white shadow-sm"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+                  }`}
+                >
+                  {s === "All" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
+                </button>
+              ))}
+              <span className="ml-auto text-xs text-gray-400">
+                {filteredDrives.length} drive{filteredDrives.length !== 1 ? "s" : ""}
+              </span>
+            </div>
+          </div>
+
+          {loadingDrives ? (
+            <p className="text-center py-20 text-gray-400 text-sm">Loading campus drives...</p>
+          ) : paginatedDrives.length === 0 ? (
+            <div className="flex flex-col items-center py-20 text-gray-400">
+              <FiAward size={40} className="mb-3 opacity-30" />
+              <p className="text-sm font-medium">No campus drives found</p>
+              <p className="text-xs mt-1">Try changing filters</p>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-1 gap-4">
+              {paginatedDrives.map(drive => <DriveCard key={drive._id} drive={drive} />)}
+            </div>
+          )}
+
+          <Pagination
+            currentPage={drivePage}
+            totalPages={Math.ceil(filteredDrives.length / ITEMS_PER_PAGE)}
+            setCurrentPage={setDrivePage}
+          />
+        </div>
+      )}
+    </div>
+  );
+}

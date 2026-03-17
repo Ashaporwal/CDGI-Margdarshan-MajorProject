@@ -268,12 +268,12 @@ function Register() {
   const departments = [
     "Computer Science Engineering (CSE)",
     "Information Technology (IT)",
+    "Computer Science Information Technology (CSIT) ",
     "Electronics & Communication (EC)",
     "Electrical Engineering (EE)",
     "Mechanical Engineering (ME)",
     "Civil Engineering (CE)",
-    "Artificial Intelligence (AI)",
-    "Data Science (DS)",
+    "Artificial Intelligence n Data Science (AIDS) ",
   ];
 
   const years = Array.from(
@@ -298,6 +298,10 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const fullName = `${form.firstName} ${form.lastName}`.trim();
+
+    // console.log("Form data being sent:", { ...form, role });
+
     if (!validateEmail(form.email)) {
       toast.error("Enter valid email");
       return;
@@ -308,6 +312,7 @@ function Register() {
     try {
       const res = await API.post("/api/register", {
         ...form,
+        name : fullName,
         role,
       });
 
@@ -320,6 +325,7 @@ function Register() {
         navigate("/login");
       }, 1000);
     } catch (err) {
+      console.log("Error :" , err)
       toast.error(err.response?.data?.message || "Error");
     }
 
@@ -341,8 +347,8 @@ function Register() {
             type="button"
             onClick={() => setRole("student")}
             className={`flex-1 py-2 rounded-lg ${role === "student"
-                ? "bg-white shadow text-violet-600"
-                : "text-gray-500"
+              ? "bg-white shadow text-violet-600"
+              : "text-gray-500"
               }`}
           >
             Student
@@ -352,8 +358,8 @@ function Register() {
             type="button"
             onClick={() => setRole("alumni")}
             className={`flex-1 py-2 rounded-lg ${role === "alumni"
-                ? "bg-white shadow text-violet-600"
-                : "text-gray-500"
+              ? "bg-white shadow text-violet-600"
+              : "text-gray-500"
               }`}
           >
             Alumni
