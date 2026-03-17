@@ -38,6 +38,16 @@ const campusDriveSchema = new mongoose.Schema({
   description: {
     type: String
   },
+  
+  registrationLink: {
+  type: String,
+  default: null
+},
+
+registrationDeadline: {
+  type: Date,
+  default: null
+},
 
   totalRegistrations: {
     type: Number,
