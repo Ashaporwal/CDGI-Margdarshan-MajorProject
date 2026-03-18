@@ -23,8 +23,8 @@ router.post(
     body("jobRoles", "Job roles must be an array")
         .isArray({ min: 1 }),
 
-    body("driveDate", "Valid drive date is required")
-        .isISO8601(),
+    // body("driveDate", "Valid drive date is required")
+    //     .isISO8601(),
 
     body("location", "Location is required")
         .notEmpty(),
