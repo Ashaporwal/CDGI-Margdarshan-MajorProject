@@ -15,7 +15,7 @@ const campusDriveSchema = new mongoose.Schema({
 
   driveDate: {
     type: Date,
-    required: true
+    // required: true
   },
 
   time: {
