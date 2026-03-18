@@ -106,7 +106,7 @@ import DeleteConfirmModal  from "./DeleteConfirmModal";
       {/* ── Page Header ── */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-800  dark:text-gray-200 flex items-center gap-2">
             <FiBell className="text-violet-500" />
             Manage Notices
           </h1>

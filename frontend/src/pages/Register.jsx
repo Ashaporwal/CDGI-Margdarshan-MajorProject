@@ -312,20 +312,28 @@ function Register() {
     try {
       const res = await API.post("/api/register", {
         ...form,
-        name : fullName,
+        name: fullName,
         role,
       });
 
       // localStorage.setItem("token", res.data.token);
       // localStorage.setItem("user", JSON.stringify(res.data.user));
 
-      toast.success("Account created 🎉");
+      // toast.success("Account created 🎉");
+      //  setTimeout(() => {
+      //   navigate("/login");
+      // }, 1000);
+      if (role === "alumni") {
+        toast.info("Registration successful! Wait for admin verification before logging in. ⏳");
+        setTimeout(() => navigate("/login"), 2500); // thoda zyada time
+      } else {
+        toast.success("Account created! 🎉");
+        setTimeout(() => navigate("/login"), 1000);
+      }
 
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
+     
     } catch (err) {
-      console.log("Error :" , err)
+      console.log("Error :", err)
       toast.error(err.response?.data?.message || "Error");
     }
 
