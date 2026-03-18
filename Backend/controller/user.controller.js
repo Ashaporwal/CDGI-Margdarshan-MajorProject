@@ -160,11 +160,11 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "invalid email or password" });
     }
 
-    //  if (user.role === "alumni" && !user.isVerified) {
-    //     return res.status(403).json({
-    //         message: "Wait for admin approval"
-    //     });
-    // }
+     if (user.role === "alumni" && !user.isVerified) {
+        return res.status(403).json({
+            message: "Your account ispending admin verification. Please wait!"
+        });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {

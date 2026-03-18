@@ -34,34 +34,68 @@ export const verifyAlumni = async (req, res) => {
   }
 };
 
+// export const getPendingAlumni = async (req, res) => {
+//   try {
+
+//     const alumni = await AlumniProfile.find()
+//       .populate({
+//         path: "userId",
+//         match: { role: "alumni" },
+//         select: "name email department graduationYear isVerified"
+//       });
+
+//     const result = alumni
+//       .filter(a => a.userId !== null)
+//       .map(a => ({
+//         id: a._id,
+
+//         userId: a.userId._id,
+
+//         name: a.userId.name,
+//         email: a.userId.email,
+//         department: a.userId.department,
+//         batch: a.userId.graduationYear,
+
+//         company: a.company,
+//         designation: a.designation,
+//         experienceYears: a.experienceYears,
+
+//         status: a.userId.isVerified ? "Verified" : "Pending"
+//       }));
+
+//     res.status(200).json(result);
+
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const getPendingAlumni = async (req, res) => {
   try {
 
-    const alumni = await AlumniProfile.find()
-      .populate({
-        path: "userId",
-        match: { role: "alumni" },
-        select: "name email department graduationYear isVerified"
-      });
+    // ✅ Step 1 — Sabhi alumni users fetch karo
+    const alumniUsers = await User.find({ role: "alumni" })
+      .select("name email department graduationYear isVerified")
+      .sort({ createdAt: -1 });
 
-    const result = alumni
-      .filter(a => a.userId !== null)
-      .map(a => ({
-        id: a._id,
-
-        userId: a.userId._id,
-
-        name: a.userId.name,
-        email: a.userId.email,
-        department: a.userId.department,
-        batch: a.userId.graduationYear,
-
-        company: a.company,
-        designation: a.designation,
-        experienceYears: a.experienceYears,
-
-        status: a.userId.isVerified ? "Verified" : "Pending"
-      }));
+    // ✅ Step 2 — Har user ka AlumniProfile bhi dhundo (agar hai toh)
+    const result = await Promise.all(
+      alumniUsers.map(async (u) => {
+        const profile = await AlumniProfile.findOne({ userId: u._id });
+        return {
+          userId:          u._id,
+          name:            u.name,
+          email:           u.email,
+          department:      u.department,
+          batch:           u.graduationYear,
+          company:         profile?.company        || null,
+          designation:     profile?.designation    || null,
+          experienceYears: profile?.experienceYears || 0,
+          status:          u.isVerified ? "Verified" : "Pending"
+        };
+      })
+    );
 
     res.status(200).json(result);
 
@@ -70,6 +104,17 @@ export const getPendingAlumni = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const deleteAlumni = async (req, res) => {
+  try {
+    await AlumniProfile.findOneAndDelete({ userId: req.params.userId });
+    await User.findByIdAndDelete(req.params.userId);
+    res.status(200).json({ message: "Alumni removed" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed" });
+  }
+};
+
 
 // GET ALL STUDENTS (NO PAGINATION)
 export const getAllStudents = async (req,res)=>{
@@ -105,7 +150,7 @@ export const updateStudentStatus = async (req,res)=>{
 
     const student = await StudentProfile.findByIdAndUpdate(
       req.params.id,
-      {status},
+      {placementStatus: status},
       {new:true}
     );
 
@@ -144,19 +189,5 @@ export const deleteStudent = async (req,res)=>{
   }
 };
 
-// export const getPendingAlumni = async (req, res) => {
-//   try {
-
-//     const alumni = await User.find({
-//       role: "alumni",
-//       isVerified: false
-//     }).select("name email department graduationYear");
-
-//     res.status(200).json(alumni);
-
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
 
 
