@@ -28,7 +28,7 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageStudents from "./pages/admin/ManageStudents";
 import ManageAlumni from "./pages/admin/ManageAlumni";
 import AdminNotices from "./pages/admin/notices/AdminNotices";
-
+    import ManageCampusDrives from "./pages/admin/campusDrives/ManageCampusDrives";
 
 function App() {
   return (
@@ -91,6 +91,7 @@ function App() {
           <Route path="students" element={<ManageStudents />} />
           <Route path="alumni" element={<ManageAlumni />} />
           <Route path="notices" element={<AdminNotices />} />
+          <Route path="/admin/campus-drives" element={<ManageCampusDrives />} />
 
 
         </Route>
