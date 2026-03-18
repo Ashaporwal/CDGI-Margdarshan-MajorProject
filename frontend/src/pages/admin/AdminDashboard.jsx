@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   FiUsers, FiCheckCircle, FiClock, FiAward,
   FiBriefcase, FiCalendar, FiBell, FiUserCheck,
-  FiTrendingUp, FiAlertCircle, FiArrowRight, 
+  FiTrendingUp, FiAlertCircle, FiArrowRight,
 } from "react-icons/fi";
 
 import {
@@ -437,93 +437,91 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-{/* ── Quick Navigation ── */}
-<div>
-  <h2 className="text-base font-bold text-gray-700 dark:text-gray-200 mb-4">
-    Quick Navigation
-  </h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      {/* ── Quick Navigation ── */}
+      <div>
+        <h2 className="text-base font-bold text-gray-700 dark:text-gray-200 mb-4">
+          Quick Navigation
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
 
-    {/* Manage Students */}
-    <button onClick={() => navigate("/admin/students")}
-      className="bg-white dark:bg-gray-800 rounded-2xl border
+          {/* Manage Students */}
+          <button onClick={() => navigate("/admin/students")}
+            className="bg-white dark:bg-gray-800 rounded-2xl border
       border-gray-100 dark:border-gray-700 shadow-sm p-5
       flex items-center gap-4 w-full text-left
       hover:shadow-md hover:border-violet-200 dark:hover:border-violet-700
       transition-all duration-200 group">
-      <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20
+            <div className="w-12 h-12 rounded-xl bg-blue-50 dark:bg-blue-900/20
       flex items-center justify-center flex-shrink-0">
-        <FaUser className="text-blue-600" size={18} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Students</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{totalStudents} students enrolled</p>
-      </div>
-      <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
+              <FaUser className="text-blue-600" size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Students</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{totalStudents} students enrolled</p>
+            </div>
+            <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
       group-hover:translate-x-1 transition-all duration-200 flex-shrink-0" />
-    </button>
+          </button>
 
-    {/* Manage Alumni */}
-    <button onClick={() => navigate("/admin/alumni")}
-      className="bg-white dark:bg-gray-800 rounded-2xl border
+          {/* Manage Alumni */}
+          <button onClick={() => navigate("/admin/alumni")}
+            className="bg-white dark:bg-gray-800 rounded-2xl border
       border-gray-100 dark:border-gray-700 shadow-sm p-5
       flex items-center gap-4 w-full text-left
       hover:shadow-md hover:border-violet-200 dark:hover:border-violet-700
       transition-all duration-200 group">
-      <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20
+            <div className="w-12 h-12 rounded-xl bg-violet-50 dark:bg-violet-900/20
       flex items-center justify-center flex-shrink-0">
-        <FaUsers className="text-violet-600" size={18} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Alumni</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{alumni.length} alumni registered</p>
-      </div>
-      <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
+              <FaUsers className="text-violet-600" size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Alumni</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{alumni.length} alumni registered</p>
+            </div>
+            <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
       group-hover:translate-x-1 transition-all duration-200 flex-shrink-0" />
-    </button>
+          </button>
 
-    {/* Manage Notices */}
-    <button onClick={() => navigate("/admin/notices")}
-      className="bg-white dark:bg-gray-800 rounded-2xl border
+          {/* Manage Notices */}
+          <button onClick={() => navigate("/admin/notices")}
+            className="bg-white dark:bg-gray-800 rounded-2xl border
       border-gray-100 dark:border-gray-700 shadow-sm p-5
       flex items-center gap-4 w-full text-left
       hover:shadow-md hover:border-violet-200 dark:hover:border-violet-700
       transition-all duration-200 group">
-      <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20
+            <div className="w-12 h-12 rounded-xl bg-orange-50 dark:bg-orange-900/20
       flex items-center justify-center flex-shrink-0">
-        <FaClipboardList className="text-orange-500" size={18} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Notices</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{notices.length} notices posted</p>
-      </div>
-      <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
+              <FaClipboardList className="text-orange-500" size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Manage Notices</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{notices.length} notices posted</p>
+            </div>
+            <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
       group-hover:translate-x-1 transition-all duration-200 flex-shrink-0" />
-    </button>
+          </button>
 
-    {/* Campus Drives */}
-    <button onClick={() => navigate("/admin/campus-drives")}
-      className="bg-white dark:bg-gray-800 rounded-2xl border
+          {/* Campus Drives */}
+          <button onClick={() => navigate("/admin/campus-drives")}
+            className="bg-white dark:bg-gray-800 rounded-2xl border
       border-gray-100 dark:border-gray-700 shadow-sm p-5
       flex items-center gap-4 w-full text-left
       hover:shadow-md hover:border-violet-200 dark:hover:border-violet-700
       transition-all duration-200 group">
-      <div className="w-12 h-12 rounded-xl bg-green-50 dark:bg-green-900/20
+            <div className="w-12 h-12 rounded-xl bg-green-50 dark:bg-green-900/20
       flex items-center justify-center flex-shrink-0">
-        <FaCalendarAlt className="text-green-600" size={18} />
-      </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Campus Drives</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{upcomingDrives} upcoming drives</p>
-      </div>
-      <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
+              <FaCalendarAlt className="text-green-600" size={18} />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-gray-800 dark:text-gray-100">Campus Drives</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{upcomingDrives} upcoming drives</p>
+            </div>
+            <FiArrowRight size={16} className="text-gray-300 group-hover:text-violet-500
       group-hover:translate-x-1 transition-all duration-200 flex-shrink-0" />
-    </button>
+          </button>
 
-  </div>
-</div>
-
-
+        </div>
+      </div>
 
     </div>
   );
