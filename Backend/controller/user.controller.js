@@ -66,6 +66,13 @@ export const register = async (req, res) => {
           message: "Department, graduation year & roll number required",
         });
       }
+
+      const enrollmentRegex = /^0832[A-Z]{2}\d{2}\d{4}$/;
+      if (!enrollmentRegex.test(enrollmentNumber)) {
+        return res.status(400).json({
+          message: "Invalid enrollment number. Format: 0832XXYY1234 (e.g. 0832IT231078)"
+        });
+      }
     }
 
     if (role === "alumni") {
@@ -160,10 +167,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "invalid email or password" });
     }
 
-     if (user.role === "alumni" && !user.isVerified) {
-        return res.status(403).json({
-            message: "Your account ispending admin verification. Please wait!"
-        });
+    if (user.role === "alumni" && !user.isVerified) {
+      return res.status(403).json({
+        message: "Your account ispending admin verification. Please wait!"
+      });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
