@@ -10,7 +10,7 @@ const noticeSchema = new mongoose.Schema(
 
     noticeType: {
       type: String,
-      enum: ["General", "Campus Drive", "Deadline", "Update"],
+      enum: ["General", "Campus Drive", "Deadline", "Update", "Event"],
       default: "General"
     },
 
@@ -27,6 +27,18 @@ const noticeSchema = new mongoose.Schema(
       type: String
     },
 
+    eventDate: {
+      type: Date,
+      default: null
+    },
+
+    venue: {
+      type: String,
+      default: null
+    },
+    posterImage: {
+      type: String,
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
