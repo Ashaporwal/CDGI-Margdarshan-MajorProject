@@ -1,26 +1,48 @@
 import { Notice } from "../model/notice.model.js";
 
+// export const createNotice = async (req, res) => {
+//   try {
+
+//     if (req.user.role !== "admin") {
+//       return res.status(403).json({ message: "Only admin can post notice" });
+//     }
+
+//     const notice = await Notice.create({
+//       ...req.body,
+//       createdBy: req.user.id
+//     });
+
+//     res.status(201).json({
+//       message: "Notice created",
+//       notice
+//     });
+
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
 export const createNotice = async (req, res) => {
   try {
-
     if (req.user.role !== "admin") {
       return res.status(403).json({ message: "Only admin can post notice" });
     }
 
+    const posterImage = req.file?.path || null; 
+
     const notice = await Notice.create({
       ...req.body,
+      posterImage,
       createdBy: req.user.id
     });
 
-    res.status(201).json({
-      message: "Notice created",
-      notice
-    });
+    res.status(201).json({ message: "Notice created", notice });
 
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 export const getAllNotices = async (req, res) => {
