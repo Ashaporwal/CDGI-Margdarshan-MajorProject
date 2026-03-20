@@ -1,4 +1,5 @@
 import express from "express";
+import { uploadPoster } from "../config/cloudinary.js";
 import { body, param } from "express-validator";
 import {
   createNotice,
@@ -16,9 +17,12 @@ const router = express.Router();
 router.post(
   "/",
   protect,
+  uploadPoster.single("posterImage"),
   body("title").notEmpty(),
-  body("description").notEmpty(),
+  // body("description").notEmpty(),
+  
   validate,
+
   createNotice
 );
 
@@ -37,6 +41,7 @@ router.put(
   "/:id",
   protect,
   param("id").isMongoId(),
+  uploadPoster.single("posterImage"), 
   validate,
   updateNotice
 );
