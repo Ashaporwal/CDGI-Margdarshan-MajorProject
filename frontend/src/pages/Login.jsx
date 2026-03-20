@@ -1,8 +1,8 @@
 // import { useState } from "react";
-// import { useNavigate, Link } from "react-router-dom";
 // import API from "../services/api";
+// import { useNavigate, Link } from "react-router-dom";
 // import { toast, ToastContainer } from "react-toastify";
-// import "react-toastify/dist/ReactToastify.css";
+// import { FiEye, FiEyeOff } from "react-icons/fi";
 
 // function Login() {
 //   const navigate = useNavigate();
@@ -10,263 +10,110 @@
 //   const [form, setForm] = useState({
 //     email: "",
 //     password: "",
-//     role: "", // no role selected by default
-//     remember: false,
 //   });
 
-//   // handle input change
-//   const handleChange = (e) => {
-//     const { name, value, type, checked } = e.target;
-//     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
-//   };
+//   const [showPass, setShowPass] = useState(false);
+//   const [loading, setLoading] = useState(false);
 
-//   // handle role button click
-//   const handleRoleClick = (role) => {
-//     setForm({ ...form, role });
-//   };
+//   const handleChange = (e) =>
+//     setForm({ ...form, [e.target.name]: e.target.value });
 
-//   // submit login
 //   const handleSubmit = async (e) => {
 //     e.preventDefault();
-//     if (!form.role) {
-//       toast.error("Please select your role before login");
-//       return;
-//     }
+//     setLoading(true);
 
 //     try {
 //       const res = await API.post("/api/login", form);
+
 //       localStorage.setItem("token", res.data.token);
+//       localStorage.setItem("user", JSON.stringify(res.data.user));
 
 //       toast.success("Login successful 🎉");
 
-//       // redirect based on role
-//       if (form.role === "admin") {
-//         navigate("/admin-dashboard");
-//       } else {
-//         navigate("/dashboard");
-//       }
+//       setTimeout(() => {
+//         navigate(
+//           res.data.user.role === "student"
+//             ? "/student/dashboard"
+//             : res.data.user.role === "alumni"
+//               ? "/alumni/dashboard"
+//               : "/admin/dashboard"
+//         );
+//       }, 1000);
 //     } catch (err) {
 //       toast.error(err.response?.data?.message || "Login failed");
 //     }
+
+//     setLoading(false);
 //   };
 
 //   return (
-//     <>
-//       <style>{`
-//         body {
-//           margin: 0;
-//           font-family: 'Segoe UI', Helvetica, sans-serif;
-//           background: linear-gradient(135deg, #f0f2f5, #e6e9ed);
-//         }
+//     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-pink-50 px-6">
 
-//         .auth-container {
-//           min-height: 100vh;
-//           display: flex;
-//           justify-content: center;
-//           align-items: center;
-//           padding: 20px;
-//         }
+//       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 border">
 
-//         .auth-card {
-//           background: #ffffff;
-//           width: 100%;
-//           max-width: 450px;
-//           padding: 40px 30px;
-//           border-radius: 12px;
-//           box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-//           display: flex;
-//           flex-direction: column;
-//         }
+//         <h2 className="text-3xl font-bold text-center text-violet-600 mb-2">
+//           Welcome Back
+//         </h2>
+//         <p className="text-center text-gray-500 mb-8">
+//           Login to continue your journey
+//         </p>
 
-//         .auth-card h2 {
-//           text-align: center;
-//           margin-bottom: 25px;
-//           color: #00509e;
-//           font-weight: 600;
-//           font-size: 1.8rem;
-//         }
+//         <form onSubmit={handleSubmit} className="space-y-5">
 
-//         .role-selection {
-//           display: flex;
-//           justify-content: space-between;
-//           margin-bottom: 20px;
-//         }
+//           <input
+//             name="email"
+//             type="email"
+//             placeholder="Email Address"
+//             onChange={handleChange}
+//             required
+//             className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
+//           />
 
-//         /* Role buttons */
-//         .role-button {
-//           flex: 1;
-//           padding: 10px 0;
-//           margin: 0 5px;
-//           border: 1px solid #ccc;
-//           border-radius: 6px;
-//           font-weight: 500;
-//           cursor: pointer;
-//           transition: all 0.3s ease;
-//           background: #d3d3d3; /* default grey */
-//           color: #333;
-//         }
-
-//         .role-button.active {
-//           background: #ffffff; /* clicked button white */
-//           color: #000;
-//         }
-
-//         .role-button:hover {
-//           background: #e0e0e0; /* subtle hover effect */
-//         }
-
-//         .auth-card input[type="email"],
-//         .auth-card input[type="password"] {
-//           width: 100%;
-//           padding: 12px;
-//           margin-bottom: 15px;
-//           border: 1px solid #ccc;
-//           border-radius: 6px;
-//           font-size: 14px;
-//           background: #ffffff;
-//           transition: 0.3s;
-//         }
-
-//         .auth-card input:focus {
-//           border-color: #00509e;
-//           box-shadow: 0 0 5px rgba(0,80,158,0.2);
-//           outline: none;
-//         }
-
-//         .checkbox-container {
-//           display: flex;
-//           align-items: center;
-//           margin-bottom: 15px;
-//         }
-
-//         .checkbox-container input[type="checkbox"] {
-//           margin-right: 8px;
-//           width: 16px;
-//           height: 16px;
-//           cursor: pointer;
-//         }
-
-//         .auth-card button {
-//           width: 100%;
-//           padding: 12px;
-//           background: #00509e;
-//           color: white;
-//           border: none;
-//           border-radius: 50px;
-//           font-size: 15px;
-//           cursor: pointer;
-//           transition: 0.3s;
-//           margin-top: 10px;
-//         }
-
-//         .auth-card button:hover {
-//           background: #377f00;
-//         }
-
-//         .auth-card p {
-//           margin-top: 18px;
-//           text-align: center;
-//           font-size: 14px;
-//         }
-
-//         .auth-card a {
-//           color: #5a5a5a;
-//           text-decoration: none;
-//           font-weight: 500;
-//         }
-
-//         .auth-card a:hover {
-//           text-decoration: underline;
-//         }
-
-//         .forgot-link {
-//           display: block;
-//           text-align: right;
-//           margin-top: -10px;
-//           margin-bottom: 15px;
-//           font-size: 13px;
-//           color: #5a5a5a;
-//         }
-
-//         .forgot-link:hover {
-//           text-decoration: underline;
-//         }
-
-//         @media (max-width: 500px) {
-//           .auth-card {
-//             padding: 30px 20px;
-//           }
-//         }
-//       `}</style>
-
-//       <div className="auth-container">
-//         <div className="auth-card">
-//           <h2 style={{fontWeight:"700" , color:"black"}}>Campus Connect</h2>
-
-
-//           {/* Role buttons */}
-//           <div className="role-selection">
-//             {["student", "alumni", "admin"].map((role) => (
-//               <button
-//                 key={role}
-//                 type="button"
-//                 className={`role-button ${form.role === role ? "active" : ""}`}
-//                 onClick={() => handleRoleClick(role)}
-//               >
-//                 {role.charAt(0).toUpperCase() + role.slice(1)}
-//               </button>
-//             ))}
-//           </div>
-
-//           <form onSubmit={handleSubmit}>
+//           {/* PASSWORD FIELD */}
+//           <div className="relative">
 //             <input
-//               type="email"
-//               name="email"
-//               placeholder="College Email"
-//               value={form.email}
-//               onChange={handleChange}
-//               required
-//               autoComplete="email"
-//             />
-
-//             <input
-//               type="password"
+//               type={showPass ? "text" : "password"}
 //               name="password"
 //               placeholder="Password"
-//               value={form.password}
+//               autoComplete="current-password"
 //               onChange={handleChange}
 //               required
-//               autoComplete="current-password"
+//               className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 pr-12"
 //             />
 
-//             <div className="checkbox-container">
-//               <input
-//                 type="checkbox"
-//                 name="remember"
-//                 checked={form.remember}
-//                 onChange={handleChange}
-//                 id="rememberMe"
-//               />
-//               <label htmlFor="rememberMe">Remember me</label>
-//             </div>
+//             <span
+//               onClick={() => setShowPass(!showPass)}
+//               className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+//             >
+//               {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+//             </span>
+//           </div>
 
-//             <Link className="forgot-link" to="/change-password">
-//               Forgot Password?
-//             </Link>
+//           <button
+//             disabled={loading}
+//             className="w-full py-3 rounded-xl text-white font-semibold 
+// bg-gradient-to-r from-violet-500 to-violet-700
+// hover:from-violet-600 hover:to-violet-800
+// shadow-md transition duration-300"
+//           >
+//             {loading ? "Logging in..." : "Login"}
+//           </button>
+//         </form>
 
-//             <button type="submit" style={{background:"blue", borderRadius:"9px"}}>Login</button>
-//           </form>
-
-//           <p style={{ color: "grey" }}>
-//             Don't have an account? <Link to="/register">Sign up</Link>
-//           </p>
-
-//           {/* <p style={{ fontWeight: "500", color: "grey" }}>Back to home</p> */}
+//         <div className="mt-6 text-center text-sm text-gray-500">
+//           Don’t have an account?{" "}
+//           <Link to="/register" className="text-violet-600 font-medium">
+//             Register
+//           </Link>
+//           <br />
+//           <Link to="/" className="text-gray-400">
+//             ← Back to Home
+//           </Link>
 //         </div>
 //       </div>
 
-//       <ToastContainer position="top-right" autoClose={3000} />
-//     </>
+//       <ToastContainer />
+//     </div>
 //   );
 // }
 
@@ -276,24 +123,91 @@ import { useState } from "react";
 import API from "../services/api";
 import { useNavigate, Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { FiEye, FiEyeOff } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiCheckCircle, FiAlertCircle } from "react-icons/fi";
+
+// ── Inline Field Message ─────────────────────────────────
+function FieldMsg({ msg, valid }) {
+  if (!msg) return null;
+  return (
+    <p className={`text-xs flex items-center gap-1 mt-1
+    ${valid ? "text-green-500" : "text-red-500"}`}>
+      {valid ? <FiCheckCircle size={11} /> : <FiAlertCircle size={11} />}
+      {msg}
+    </p>
+  );
+}
 
 function Login() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [form, setForm] = useState({ email: "", password: "" });
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
+  // ── Validation states ──────────────────────────────────
+  const [errors, setErrors] = useState({ email: null, password: null });
+  const [touched, setTouched] = useState({ email: false, password: false });
 
+  // ── Validators ─────────────────────────────────────────
+  const validateEmail = (val) => {
+    if (!val) return { valid: false, msg: "Email is required" };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val))
+      return { valid: false, msg: "Enter a valid email address" };
+    return { valid: true, msg: "Valid email ✓" };
+  };
+
+  const validatePassword = (val) => {
+    if (!val) return { valid: false, msg: "Password is required" };
+    if (val.length < 6)
+      return { valid: false, msg: `Too short — ${6 - val.length} more character${6 - val.length > 1 ? "s" : ""} needed` };
+    return { valid: true, msg: "Password entered ✓" };
+  };
+  
+
+  // ── Border color ───────────────────────────────────────
+  const borderClass = (field) => {
+    if (!touched[field] || !errors[field]) return "border-gray-300";
+    return errors[field].valid
+      ? "border-green-400 focus:ring-green-300"
+      : "border-red-400 focus:ring-red-300";
+  };
+
+  // ── Handlers ───────────────────────────────────────────
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+
+    if (name === "email")
+      setErrors((prev) => ({ ...prev, email: validateEmail(value) }));
+    if (name === "password")
+      setErrors((prev) => ({ ...prev, password: validatePassword(value) }));
+  };
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    if (field === "email")
+      setErrors((prev) => ({ ...prev, email: validateEmail(form.email) }));
+    if (field === "password")
+      setErrors((prev) => ({ ...prev, password: validatePassword(form.password) }));
+  };
+
+  // ── Submit ─────────────────────────────────────────────
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Mark all touched
+    setTouched({ email: true, password: true });
+
+    const emailResult    = validateEmail(form.email);
+    const passwordResult = validatePassword(form.password);
+
+    setErrors({ email: emailResult, password: passwordResult });
+
+    if (!emailResult.valid || !passwordResult.valid) {
+      toast.error("Please fix the errors before submitting");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -313,15 +227,42 @@ function Login() {
               : "/admin/dashboard"
         );
       }, 1000);
+
     } catch (err) {
-      toast.error(err.response?.data?.message || "Login failed");
+      const msg = err.response?.data?.message || "Login failed";
+      toast.error(msg);
+
+      // Inline error for specific cases
+      if (msg.toLowerCase().includes("email") || msg.toLowerCase().includes("invalid")) {
+        setTouched((prev) => ({ ...prev, email: true }));
+        setErrors((prev) => ({
+          ...prev,
+          email: { valid: false, msg: "Invalid email or password" },
+        }));
+      }
+
+      if (msg.toLowerCase().includes("password")) {
+        setTouched((prev) => ({ ...prev, password: true }));
+        setErrors((prev) => ({
+          ...prev,
+          password: { valid: false, msg: msg },
+        }));
+      }
+
+      // Pending verification case — sirf toast, no inline
+      if (err.response?.status === 403) {
+        setErrors({ email: null, password: null });
+        setTouched({ email: false, password: false });
+      }
     }
 
     setLoading(false);
   };
 
+  // ──────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-white to-pink-50 px-6">
+    <div className="min-h-screen flex items-center justify-center
+    bg-gradient-to-br from-violet-50 via-white to-pink-50 px-6">
 
       <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-10 border">
 
@@ -334,55 +275,70 @@ function Login() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
 
-          <input
-            name="email"
-            type="email"
-            placeholder="Email Address"
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500"
-          />
-
-          {/* PASSWORD FIELD */}
-          <div className="relative">
+          {/* Email */}
+          <div>
             <input
-              type={showPass ? "text" : "password"}
-              name="password"
-              placeholder="Password"
-              autoComplete="current-password"
+              name="email"
+              type="email"
+              placeholder="Email Address"
               onChange={handleChange}
+              onBlur={() => handleBlur("email")}
               required
-              className="w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 pr-12"
+              className={`w-full px-4 py-3 border ${borderClass("email")}
+              rounded-xl focus:outline-none focus:ring-2 transition`}
             />
-
-            <span
-              onClick={() => setShowPass(!showPass)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
-            >
-              {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
-            </span>
+            {touched.email && errors.email && (
+              <FieldMsg msg={errors.email.msg} valid={errors.email.valid} />
+            )}
           </div>
 
+          {/* Password */}
+          <div>
+            <div className="relative">
+              <input
+                type={showPass ? "text" : "password"}
+                name="password"
+                placeholder="Password"
+                autoComplete="current-password"
+                onChange={handleChange}
+                onBlur={() => handleBlur("password")}
+                required
+                className={`w-full px-4 py-3 border ${borderClass("password")}
+                rounded-xl focus:outline-none focus:ring-2 transition pr-12`}
+              />
+              <span
+                onClick={() => setShowPass(!showPass)}
+                className="absolute right-4 top-1/2 -translate-y-1/2
+                cursor-pointer text-gray-500"
+              >
+                {showPass ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+              </span>
+            </div>
+            {touched.password && errors.password && (
+              <FieldMsg msg={errors.password.msg} valid={errors.password.valid} />
+            )}
+          </div>
+
+          {/* Submit */}
           <button
             disabled={loading}
-            className="w-full py-3 rounded-xl text-white font-semibold 
-bg-gradient-to-r from-violet-500 to-violet-700
-hover:from-violet-600 hover:to-violet-800
-shadow-md transition duration-300"
+            className="w-full py-3 rounded-xl text-white font-semibold
+            bg-gradient-to-r from-violet-500 to-violet-700
+            hover:from-violet-600 hover:to-violet-800
+            shadow-md transition duration-300 disabled:opacity-60"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+
         </form>
 
         <div className="mt-6 text-center text-sm text-gray-500">
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Link to="/register" className="text-violet-600 font-medium">
             Register
           </Link>
           <br />
-          <Link to="/" className="text-gray-400">
-            ← Back to Home
-          </Link>
+          <Link to="/" className="text-gray-400">← Back to Home</Link>
         </div>
       </div>
 
