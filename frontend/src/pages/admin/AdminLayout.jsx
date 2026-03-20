@@ -167,7 +167,7 @@ function AdminLayout() {
     { name: "Dashboard", icon: <FaTachometerAlt />, path: "/admin/dashboard" },
     { name: "Manage Students", icon: <FaUser />, path: "/admin/students" },
     { name: "Manage Alumni", icon: <FaUsers />, path: "/admin/alumni" },
-    { name: "Manage Notices", icon: <FaClipboardList />, path: "/admin/notices" },
+    { name: "Notices/Events", icon: <FaClipboardList />, path: "/admin/notices" },
     { name: "Campus Drives", icon: <FaCalendarAlt />, path: "/admin/campus-drives" },
   ];
 
