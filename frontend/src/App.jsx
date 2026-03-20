@@ -15,6 +15,7 @@ import ProfilePage from "./pages/student/ProfilePage";
 import Stories from "./pages/student/Stories";
 import Jobs from "./pages/student/JobPage";
 import StudentNotices from "./pages/student/StudentNotices";
+import Events from "../src/pages/student/Events";
 
 import AlumniLayout from "./pages/alumni/AlumniLayout";
 import AlumniDashboard from "./pages/alumni/AlumniDashboard";
@@ -54,7 +55,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
           <Route path="jobs" element={<Jobs />} />
           {/* <Route path="applications" element={<Applications />} /> */}
-          {/* <Route path="events" element={<Events />} /> */}
+          <Route path="events" element={<Events />} />
           <Route path="notice" element={<StudentNotices />} />
           <Route path="stories" element={<Stories />} />
 
