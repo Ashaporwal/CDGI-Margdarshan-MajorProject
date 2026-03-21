@@ -354,7 +354,8 @@ function AdminNotices() {
       const res = await API.get("/api/notice");
       setNotices(res.data.notices || []);
     } catch {
-      toast.error("Notices load nahi hue");
+      toast.error("Failed to load notices. Please try again.");
+
     } finally {
       setFetching(false);
     }
@@ -395,7 +396,7 @@ function AdminNotices() {
   // ── Submit ─────────────────────────────────────────────
   const handleFormSubmit = async (formData) => {
     if (!formData.get("title") || !formData.get("description")) {
-      toast.error("Title aur Description required hain!");
+      toast.error("Title aur Description rare required.");
       return;
     }
 
@@ -417,7 +418,7 @@ function AdminNotices() {
       setShowForm(false);
       fetchNotices();
     } catch (err) {
-      toast.error(err.response?.data?.message || "Kuch gadbad ho gayi");
+      toast.error(err.response?.data?.message || "Something went wrong. Please try again.");
     } finally {
       setFormLoading(false);
     }
@@ -432,7 +433,7 @@ function AdminNotices() {
       setDeleteId(null);
       fetchNotices();
     } catch {
-      toast.error("Delete failed, try again");
+      toast.error("Failed to delete, try again");
     } finally {
       setDeleteLoading(false);
     }
@@ -563,6 +564,7 @@ function AdminNotices() {
           onFilterChange={setFilter}
           search={search}
           onSearchChange={setSearch}
+          mode={activeTab}
         />
       )}
 
@@ -574,6 +576,7 @@ function AdminNotices() {
         editData={editData}
         loading={formLoading}
         defaultType={activeTab === "events" ? "Event" : "General"}
+        // mode={activeTab}
       />
       <DeleteConfirmModal
         isOpen={!!deleteId}
