@@ -64,9 +64,9 @@ function JobCard({ job }) {
         </div>
         <span className={`shrink-0 text-xs font-semibold px-2.5 py-1 rounded-full
         ${isInternship
-          ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
-          : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-        }`}>
+            ? "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300"
+            : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+          }`}>
           {job.jobType}
         </span>
       </div>
@@ -124,18 +124,32 @@ function JobCard({ job }) {
 
       {/* Footer */}
       <div className="flex items-center justify-between pt-2 mt-auto
-      border-t border-gray-100 dark:border-gray-700">
+border-t border-gray-100 dark:border-gray-700">
         <DeadlineBadge deadline={job.deadline} />
-        <span className="flex items-center gap-1 text-xs text-gray-400">
-          <FiUser size={11} />
-          {job.postedBy?.name || "Admin"}
-          {job.postedBy?.role === "alumni" && (
-            <span className="ml-1 text-xs bg-blue-100 text-blue-600
-            dark:bg-blue-900/30 dark:text-blue-300 px-1.5 rounded-full">
-              Alumni
+        <div className="flex flex-col items-end gap-1">
+          <span className="flex items-center gap-1 text-xs text-gray-400">
+            <FiUser size={11} />
+            {job.postedBy?.name || "Admin"}
+            {job.postedBy?.role === "alumni" && (
+              <span className="ml-1 text-xs bg-blue-100 text-blue-600
+        dark:bg-blue-900/30 dark:text-blue-300 px-1.5 rounded-full">
+                Alumni
+              </span>
+            )}
+          </span>
+          {/* ← ADD THIS */}
+          {job.createdAt && (
+            <span className="flex items-center gap-1 text-xs text-gray-400
+      dark:text-gray-600">
+              <FiClock size={10} />
+              {new Date(job.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric", month: "short", year: "numeric"
+              })} · {new Date(job.createdAt).toLocaleTimeString("en-IN", {
+                hour: "2-digit", minute: "2-digit", hour12: true
+              })}
             </span>
           )}
-        </span>
+        </div>
       </div>
     </div>
   );
@@ -143,13 +157,13 @@ function JobCard({ job }) {
 
 // ── Campus Drive Card ─────────────────────────────────────
 function DriveCard({ drive }) {
-  const [showDesc, setShowDesc]   = useState(false);
-  const [showElig, setShowElig]   = useState(false);
+  const [showDesc, setShowDesc] = useState(false);
+  const [showElig, setShowElig] = useState(false);
 
   const STATUS_STYLES = {
-    upcoming:  { badge: "bg-blue-50 text-blue-600 border border-blue-200",    icon: <FiClock size={11} />,       label: "Upcoming"  },
+    upcoming: { badge: "bg-blue-50 text-blue-600 border border-blue-200", icon: <FiClock size={11} />, label: "Upcoming" },
     completed: { badge: "bg-green-50 text-green-600 border border-green-200", icon: <FiCheckCircle size={11} />, label: "Completed" },
-    cancelled: { badge: "bg-red-50 text-red-500 border border-red-200",       icon: <FiXCircle size={11} />,     label: "Cancelled" },
+    cancelled: { badge: "bg-red-50 text-red-500 border border-red-200", icon: <FiXCircle size={11} />, label: "Cancelled" },
   };
   const s = STATUS_STYLES[drive.status] || STATUS_STYLES.upcoming;
 
@@ -253,8 +267,9 @@ function DriveCard({ drive }) {
       )}
 
       {/* ── Row 6: Footer ── */}
+
       <div className="flex items-center justify-between pt-2
-      border-t border-gray-100 dark:border-gray-700 mt-auto">
+border-t border-gray-100 dark:border-gray-700 mt-auto">
         <div className="flex items-center gap-3 text-xs text-gray-400">
           {drive.totalRegistrations > 0 && (
             <span className="flex items-center gap-1">
@@ -267,9 +282,23 @@ function DriveCard({ drive }) {
             </span>
           )}
         </div>
-        <span className="flex items-center gap-1 text-xs text-gray-400">
-          <FiUser size={11} /> {drive.createdBy?.name || "Admin"}
-        </span>
+        <div className="flex flex-col items-end gap-1">
+          <span className="flex items-center gap-1 text-xs text-gray-400">
+            <FiUser size={11} /> {drive.createdBy?.name || "Admin"}
+          </span>
+          {/* ← ADD THIS */}
+          {drive.createdAt && (
+            <span className="flex items-center gap-1 text-xs text-gray-400
+      dark:text-gray-600">
+              <FiClock size={10} />
+              {new Date(drive.createdAt).toLocaleDateString("en-IN", {
+                day: "numeric", month: "short", year: "numeric"
+              })} · {new Date(drive.createdAt).toLocaleTimeString("en-IN", {
+                hour: "2-digit", minute: "2-digit", hour12: true
+              })}
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -296,9 +325,9 @@ function Pagination({ currentPage, totalPages, setCurrentPage }) {
           onClick={() => setCurrentPage(page)}
           className={`w-8 h-8 rounded-lg text-xs font-semibold transition
           ${currentPage === page
-            ? "bg-violet-600 text-white shadow-sm"
-            : "border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
-          }`}
+              ? "bg-violet-600 text-white shadow-sm"
+              : "border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+            }`}
         >
           {page}
         </button>
@@ -319,21 +348,21 @@ function Pagination({ currentPage, totalPages, setCurrentPage }) {
 
 // ── Main Page ─────────────────────────────────────────────
 export default function JobPage() {
-  const [activeTab, setActiveTab]     = useState("jobs");
-  const [jobs, setJobs]               = useState([]);
-  const [drives, setDrives]           = useState([]);
-  const [loadingJobs, setLoadingJobs]     = useState(true);
+  const [activeTab, setActiveTab] = useState("jobs");
+  const [jobs, setJobs] = useState([]);
+  const [drives, setDrives] = useState([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
   const [loadingDrives, setLoadingDrives] = useState(true);
 
   // Jobs filters
   const [jobSearch, setJobSearch] = useState("");
-  const [jobType, setJobType]     = useState("All");
-  const [jobPage, setJobPage]     = useState(1);
+  const [jobType, setJobType] = useState("All");
+  const [jobPage, setJobPage] = useState(1);
 
   // Drives filters
-  const [driveSearch, setDriveSearch]   = useState("");
-  const [driveStatus, setDriveStatus]   = useState("All");
-  const [drivePage, setDrivePage]       = useState(1);
+  const [driveSearch, setDriveSearch] = useState("");
+  const [driveStatus, setDriveStatus] = useState("All");
+  const [drivePage, setDrivePage] = useState(1);
 
   // ── Fetch ──────────────────────────────────────────────
   useEffect(() => {
@@ -371,7 +400,7 @@ export default function JobPage() {
     return matchSearch && matchStatus;
   }), [drives, driveSearch, driveStatus]);
 
-  const paginatedJobs   = filteredJobs.slice((jobPage - 1) * ITEMS_PER_PAGE, jobPage * ITEMS_PER_PAGE);
+  const paginatedJobs = filteredJobs.slice((jobPage - 1) * ITEMS_PER_PAGE, jobPage * ITEMS_PER_PAGE);
   const paginatedDrives = filteredDrives.slice((drivePage - 1) * ITEMS_PER_PAGE, drivePage * ITEMS_PER_PAGE);
 
   return (
@@ -392,25 +421,25 @@ export default function JobPage() {
       {/* ── Tabs ── */}
       <div className="flex gap-1 bg-gray-100 dark:bg-gray-700/50 p-1 rounded-xl w-fit">
         {[
-          { key: "jobs",   label: "All Jobs",      icon: <FiBriefcase size={14} />, count: jobs.length   },
-          { key: "drives", label: "Campus Drives",  icon: <FiAward size={14} />,    count: drives.length },
+          { key: "jobs", label: "All Jobs", icon: <FiBriefcase size={14} />, count: jobs.length },
+          { key: "drives", label: "Campus Drives", icon: <FiAward size={14} />, count: drives.length },
         ].map(tab => (
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition
             ${activeTab === tab.key
-              ? "bg-white dark:bg-gray-800 text-violet-600 shadow-sm"
-              : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
-            }`}
+                ? "bg-white dark:bg-gray-800 text-violet-600 shadow-sm"
+                : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+              }`}
           >
             {tab.icon}
             {tab.label}
             <span className={`text-xs px-1.5 py-0.5 rounded-full
             ${activeTab === tab.key
-              ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600"
-              : "bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300"
-            }`}>
+                ? "bg-violet-100 dark:bg-violet-900/30 text-violet-600"
+                : "bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-300"
+              }`}>
               {tab.count}
             </span>
           </button>
@@ -438,9 +467,9 @@ export default function JobPage() {
                   onClick={() => { setJobType(t); setJobPage(1); }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition
                   ${jobType === t
-                    ? "bg-violet-600 text-white shadow-sm"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
-                  }`}
+                      ? "bg-violet-600 text-white shadow-sm"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+                    }`}
                 >{t}</button>
               ))}
               <span className="ml-auto text-xs text-gray-400">
@@ -492,9 +521,9 @@ export default function JobPage() {
                   onClick={() => { setDriveStatus(s); setDrivePage(1); }}
                   className={`px-3 py-1.5 rounded-full text-xs font-semibold transition capitalize
                   ${driveStatus === s
-                    ? "bg-violet-600 text-white shadow-sm"
-                    : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
-                  }`}
+                      ? "bg-violet-600 text-white shadow-sm"
+                      : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-violet-50 hover:text-violet-600"
+                    }`}
                 >
                   {s === "All" ? "All" : s.charAt(0).toUpperCase() + s.slice(1)}
                 </button>
