@@ -124,10 +124,7 @@ fixed h-screen overflow-y-auto transition-colors duration-300">
         {/* Navbar */}
         <div className="h-16 bg-white dark:bg-gray-800 shadow flex items-center justify-between px-6 transition-colors duration-300">
 
-          <h2 className="text-lg font-semibold text-violet-600 dark:text-violet-400">
-            My Profile
-          </h2>
-
+         <div></div>
 
           <div className="flex items-center gap-5 text-gray-700 dark:text-gray-200">
 
